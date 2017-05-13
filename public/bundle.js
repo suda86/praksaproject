@@ -19761,8 +19761,8 @@
 
 	var Profile = __webpack_require__(189);
 
-	var Registracija = __webpack_require__(190);
-	var Login = __webpack_require__(191);
+	var Registracija = __webpack_require__(197);
+	var Login = __webpack_require__(198);
 
 	var Main = React.createClass({
 	  displayName: 'Main',
@@ -23371,33 +23371,44 @@
 	var React = __webpack_require__(1);
 	var axios = __webpack_require__(160);
 
+	var PersonalInfo = __webpack_require__(190);
+	var FriendsList = __webpack_require__(191);
+	var SugestedFriendsList = __webpack_require__(193);
+	var PopupList = __webpack_require__(195);
+
 	var Profile = React.createClass({
 	  displayName: 'Profile',
 
 	  getInitialState: function getInitialState() {
+	    var friendsIds = this.props.info.userFriends;
+	    var friendsObj = friendsIds.map(function (id) {
+	      return { _id: id };
+	    });
 	    return {
-	      friends: this.props.info.userFriends,
-	      sugestedFriends: []
+	      friends: friendsObj,
+	      sugestedFriends: [],
+	      friendsFriends: [],
+	      popup: false
 	    };
 	  },
-	  componentDidMount: function componentDidMount() {
+	  componentWillMount: function componentWillMount() {
 	    var _this = this;
 
 	    var friends = this.state.friends;
 	    var newState = friends.map(function (friend) {
-	      return axios.get('/api/getuser/' + friend).then(function (res) {
-	        return res.data.firstName + ' ' + res.data.lastName;
+	      return axios.get('/api/getuser/' + friend._id).then(function (res) {
+	        return res.data;
 	      }).catch(function (e) {
 	        console.log(e);
 	      });
 	    });
-	    return Promise.all(newState).then(function (friendsNames) {
+	    return Promise.all(newState).then(function (friends) {
 	      _this.setState({
-	        friends: friendsNames
+	        friends: friends
 	      });
 	    });
 	  },
-	  componentDidUpdate: function componentDidUpdate() {
+	  componentDidMount: function componentDidMount() {
 	    var _this2 = this;
 
 	    axios.post('/api/sugestedFriends', {
@@ -23410,85 +23421,34 @@
 	      });
 	    });
 	  },
-	  renderFriends: function renderFriends() {
-	    var friends = this.state.friends;
-	    return friends.map(function (friend) {
-	      return React.createElement(
-	        'div',
-	        { key: friend },
-	        React.createElement(
-	          'p',
-	          null,
-	          friend
-	        )
-	      );
+	  handleSeeFriendFriends: function handleSeeFriendFriends(friendFriends) {
+	    this.setState({
+	      friendsFriends: friendFriends,
+	      popup: true
 	    });
 	  },
-	  renderSugestedFriends: function renderSugestedFriends() {
-	    // var sugFr = this.state.sugestedFriends;
-	    return this.state.sugestedFriends.map(function (id) {
-	      return React.createElement(
-	        'div',
-	        { key: id.id },
-	        React.createElement(
-	          'p',
-	          null,
-	          id.firstName + ' ' + id.lastName
-	        )
-	      );
+	  handleClosePopup: function handleClosePopup() {
+	    this.setState({
+	      popup: false
 	    });
 	  },
 	  render: function render() {
+	    var _this3 = this;
+
+	    var renderPopup = function renderPopup() {
+	      if (_this3.state.popup) {
+	        return React.createElement(PopupList, { friends: _this3.state.friendsFriends, seeFriendFriends: _this3.handleSeeFriendFriends, onClosePopup: _this3.handleClosePopup });
+	      } else {
+	        return React.createElement('div', null);
+	      }
+	    };
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Profile Page'
-	      ),
-	      React.createElement(
-	        'h1',
-	        null,
-	        this.props.info.firstName,
-	        ' ',
-	        this.props.info.lastName
-	      ),
-	      React.createElement(
-	        'h3',
-	        null,
-	        'about'
-	      ),
-	      React.createElement(
-	        'h4',
-	        null,
-	        'Age: ',
-	        this.props.info.age
-	      ),
-	      React.createElement(
-	        'h4',
-	        null,
-	        'Gender: ',
-	        this.props.info.gender
-	      ),
-	      React.createElement(
-	        'h4',
-	        null,
-	        'email address: ',
-	        this.props.info.email
-	      ),
-	      React.createElement(
-	        'h3',
-	        null,
-	        'Friends:'
-	      ),
-	      this.renderFriends(),
-	      React.createElement(
-	        'h3',
-	        null,
-	        'Persons you maybe know:'
-	      ),
-	      this.renderSugestedFriends()
+	      React.createElement(PersonalInfo, { info: this.props.info }),
+	      React.createElement(FriendsList, { friends: this.state.friends, seeFriendFriends: this.handleSeeFriendFriends }),
+	      renderPopup(),
+	      React.createElement(SugestedFriendsList, { friends: this.state.sugestedFriends, seeFriendFriends: this.handleSeeFriendFriends })
 	    );
 	  }
 	});
@@ -23497,6 +23457,413 @@
 
 /***/ }),
 /* 190 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var React = __webpack_require__(1);
+
+	var PersonalInfo = React.createClass({
+	  displayName: "PersonalInfo",
+
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "personal-info" },
+	      React.createElement(
+	        "h1",
+	        null,
+	        this.props.info.firstName,
+	        " ",
+	        this.props.info.lastName
+	      ),
+	      React.createElement(
+	        "h3",
+	        null,
+	        "About"
+	      ),
+	      React.createElement(
+	        "p",
+	        null,
+	        "Genge: ",
+	        this.props.info.genre
+	      ),
+	      React.createElement(
+	        "p",
+	        null,
+	        "Age: ",
+	        this.props.info.age
+	      ),
+	      React.createElement(
+	        "p",
+	        null,
+	        "Email address: ",
+	        this.props.info.email
+	      )
+	    );
+	  }
+	});
+
+	module.exports = PersonalInfo;
+
+/***/ }),
+/* 191 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var React = __webpack_require__(1);
+
+	var Friend = __webpack_require__(192);
+
+	var FriendsList = React.createClass({
+	  displayName: 'FriendsList',
+
+	  render: function render() {
+	    var _this = this;
+
+	    var friends = this.props.friends;
+
+	    var renderFriends = function renderFriends() {
+	      return friends.map(function (friend) {
+	        return React.createElement(Friend, _extends({ key: friend._id }, friend, { onSeeFriendsClick: _this.props.seeFriendFriends }));
+	      });
+	    };
+	    return React.createElement(
+	      'div',
+	      { className: 'friends-list' },
+	      React.createElement(
+	        'p',
+	        null,
+	        'friends list component'
+	      ),
+	      renderFriends()
+	    );
+	  }
+	});
+
+	module.exports = FriendsList;
+
+/***/ }),
+/* 192 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var axios = __webpack_require__(160);
+
+	var Friend = React.createClass({
+	  displayName: 'Friend',
+
+	  seeFriends: function seeFriends() {
+	    var _this = this;
+
+	    // console.log(this.props.friends);
+	    var friendsIds = this.props.friends;
+	    var friendsComplete = friendsIds.map(function (friendId) {
+	      return axios.get('/api/getuser/' + friendId).then(function (res) {
+	        return res.data;
+	      }).catch(function (e) {
+	        console.log(e);
+	      });
+	    });
+	    return Promise.all(friendsComplete).then(function (friends) {
+	      _this.props.onSeeFriendsClick(friends);
+	    });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'friend' },
+	      React.createElement(
+	        'p',
+	        null,
+	        'First Name: ',
+	        this.props.firstName
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'last Name: ',
+	        this.props.lastName
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Age: ',
+	        this.props.age
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Gender: ',
+	        this.props.gender
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Email address: ',
+	        this.props.email
+	      ),
+	      React.createElement(
+	        'button',
+	        null,
+	        'Remove from friend list'
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.seeFriends },
+	        'see friends'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Friend;
+
+/***/ }),
+/* 193 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var React = __webpack_require__(1);
+
+	var FriendSugest = __webpack_require__(194);
+
+	var SugestedFriendsList = React.createClass({
+	  displayName: 'SugestedFriendsList',
+
+	  render: function render() {
+	    var _this = this;
+
+	    var friends = this.props.friends;
+
+	    var renderFriends = function renderFriends() {
+	      return friends.map(function (friend) {
+	        return React.createElement(FriendSugest, _extends({ key: friend._id }, friend, { onSeeFriendsClick: _this.props.seeFriendFriends }));
+	      });
+	    };
+	    return React.createElement(
+	      'div',
+	      { className: 'sugested-friends-list' },
+	      React.createElement(
+	        'p',
+	        null,
+	        'Sugested friends list'
+	      ),
+	      renderFriends()
+	    );
+	  }
+	});
+
+	module.exports = SugestedFriendsList;
+
+/***/ }),
+/* 194 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var React = __webpack_require__(1);
+
+	var FriendSugest = React.createClass({
+	  displayName: "FriendSugest",
+
+	  seeFriends: function seeFriends() {
+	    var _this = this;
+
+	    // console.log(this.props.friends);
+	    var friendsIds = this.props.friends;
+	    var friendsComplete = friendsIds.map(function (friendId) {
+	      return axios.get("/api/getuser/" + friendId).then(function (res) {
+	        return res.data;
+	      }).catch(function (e) {
+	        console.log(e);
+	      });
+	    });
+	    return Promise.all(friendsComplete).then(function (friends) {
+	      _this.props.onSeeFriendsClick(friends);
+	    });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "friend" },
+	      React.createElement(
+	        "p",
+	        null,
+	        "First Name: ",
+	        this.props.firstName
+	      ),
+	      React.createElement(
+	        "p",
+	        null,
+	        "last Name: ",
+	        this.props.lastName
+	      ),
+	      React.createElement(
+	        "p",
+	        null,
+	        "Age: ",
+	        this.props.age
+	      ),
+	      React.createElement(
+	        "p",
+	        null,
+	        "Gender: ",
+	        this.props.gender
+	      ),
+	      React.createElement(
+	        "p",
+	        null,
+	        "Email address: ",
+	        this.props.email
+	      ),
+	      React.createElement(
+	        "button",
+	        null,
+	        "send friend request"
+	      ),
+	      React.createElement(
+	        "button",
+	        { onClick: this.seeFriends },
+	        "see friends"
+	      )
+	    );
+	  }
+	});
+
+	module.exports = FriendSugest;
+
+/***/ }),
+/* 195 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var React = __webpack_require__(1);
+
+	var PopupFriend = __webpack_require__(196);
+
+	var PopupList = React.createClass({
+	  displayName: 'PopupList',
+
+	  onCloseClick: function onCloseClick() {
+	    this.props.onClosePopup();
+	  },
+	  render: function render() {
+	    var _this = this;
+
+	    var friends = this.props.friends;
+
+	    var renderFriends = function renderFriends() {
+	      return friends.map(function (friend) {
+	        return React.createElement(PopupFriend, _extends({ key: friend._id }, friend, { onSeeFriendsClick: _this.props.seeFriendFriends }));
+	      });
+	    };
+	    return React.createElement(
+	      'div',
+	      { className: 'popup-list' },
+	      renderFriends(),
+	      React.createElement(
+	        'button',
+	        { onClick: this.onCloseClick },
+	        'Close'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = PopupList;
+
+/***/ }),
+/* 196 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var axios = __webpack_require__(160);
+
+	var PopupFriend = React.createClass({
+	  displayName: 'PopupFriend',
+
+	  seeFriends: function seeFriends() {
+	    var _this = this;
+
+	    // console.log(this.props.friends);
+	    var friendsIds = this.props.friends;
+	    var friendsComplete = friendsIds.map(function (friendId) {
+	      return axios.get('/api/getuser/' + friendId).then(function (res) {
+	        return res.data;
+	      }).catch(function (e) {
+	        console.log(e);
+	      });
+	    });
+	    return Promise.all(friendsComplete).then(function (friends) {
+	      _this.props.onSeeFriendsClick(friends);
+	    });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'friends-friends-list' },
+	      React.createElement(
+	        'p',
+	        null,
+	        'First Name: ',
+	        this.props.firstName
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'last Name: ',
+	        this.props.lastName
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Age: ',
+	        this.props.age
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Gender: ',
+	        this.props.gender
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Email address: ',
+	        this.props.email
+	      ),
+	      React.createElement(
+	        'button',
+	        null,
+	        'Remove from friend list'
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.seeFriends },
+	        'see friends'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = PopupFriend;
+
+/***/ }),
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23583,7 +23950,7 @@
 	module.exports = Registracija;
 
 /***/ }),
-/* 191 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';

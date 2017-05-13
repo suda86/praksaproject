@@ -55,7 +55,7 @@ app.post('/api/login', (req, res) => {
 app.get('/api/getuser/:id', (req, res) => {
   var userId = req.params.id;
   User.findOne({'_id': userId}).then((user) => {
-    res.send({firstName: user.firstName, lastName: user.lastName});
+    res.send(user);
   }).catch((e) => {
     console.log(e);
   });

@@ -9,3 +9,46 @@ form {
 form input {
   margin: 20px;
 }
+
+.personal-info {
+  text-align: center;
+  background-color: blue;
+  border-radius: 5%;
+}
+
+.friends-list {
+  text-align: center;
+  border-radius: 5%;
+  background-color: grey;
+}
+
+.friend {
+  text-align: center;
+  background-color: green;
+  border: 1px solid black;
+  border-radius: 5%;
+}
+
+.sugested-friends-list {
+  text-align: center;
+  border-radius: 5%;
+  background-color: purple;
+}
+
+.friends-friends-list {
+  text-align: center;
+  background-color: red;
+  border-radius: 5%;
+}
+
+.popup-list {
+  margin-left: 35%;
+  margin-top: 10%;
+  background-color: blue;
+  width: 30%;
+  min-height: 250px;
+}
+
+button {
+  margin: 5px;
+}

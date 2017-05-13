@@ -1,29 +1,40 @@
 const React = require('react');
 const axios = require('axios');
 
+const PersonalInfo = require('./PersonalInfo');
+const FriendsList = require('./FriendsList');
+const SugestedFriendsList = require('./SugestedFriendsList');
+const PopupList = require('./PopupList');
+
 var Profile = React.createClass({
   getInitialState: function() {
+    var friendsIds = this.props.info.userFriends;
+    var friendsObj = friendsIds.map((id) => {
+      return {_id: id}
+    })
     return {
-      friends: this.props.info.userFriends,
-      sugestedFriends: []
+      friends: friendsObj,
+      sugestedFriends: [],
+      friendsFriends: [],
+      popup: false
     }
   },
-  componentDidMount: function() {
+  componentWillMount: function() {
     var friends = this.state.friends;
     var newState = friends.map((friend) => {
-      return axios.get(`/api/getuser/${friend}`).then((res) => {
-        return res.data.firstName + ' ' + res.data.lastName;
+      return axios.get(`/api/getuser/${friend._id}`).then((res) => {
+        return res.data;
       }).catch((e) => {
         console.log(e);
       });
     });
-    return Promise.all(newState).then((friendsNames) => {
+    return Promise.all(newState).then((friends) => {
       this.setState({
-        friends: friendsNames
+        friends: friends
       });
     });
   },
-  componentDidUpdate: function() {
+  componentDidMount: function() {
     axios.post('/api/sugestedFriends', {
       email: this.props.info.email,
       friends: this.props.info.userFriends,
@@ -34,39 +45,37 @@ var Profile = React.createClass({
       });
     });
   },
-  renderFriends: function() {
-    var friends = this.state.friends;
-    return friends.map(function(friend) {
-      return (
-        <div key={friend}>
-          <p>{friend}</p>
-        </div>
-      );
+  handleSeeFriendFriends: function(friendFriends) {
+    this.setState({
+      friendsFriends: friendFriends,
+      popup: true
     });
   },
-  renderSugestedFriends: function() {
-    // var sugFr = this.state.sugestedFriends;
-    return this.state.sugestedFriends.map((id) => {
-      return (
-        <div key={id.id}>
-          <p>{id.firstName + ' ' + id.lastName}</p>
-        </div>
-      );
+  handleClosePopup: function() {
+    this.setState({
+      popup: false
     });
   },
   render: function() {
+    var renderPopup = () => {
+      if(this.state.popup) {
+        return (
+          <PopupList friends={this.state.friendsFriends} seeFriendFriends={this.handleSeeFriendFriends} onClosePopup={this.handleClosePopup}/>
+        );
+      } else {
+        return (
+          <div>
+
+          </div>
+        )
+      }
+    };
     return (
       <div>
-        <h1>Profile Page</h1>
-        <h1>{this.props.info.firstName} {this.props.info.lastName}</h1>
-        <h3>about</h3>
-        <h4>Age: {this.props.info.age}</h4>
-        <h4>Gender: {this.props.info.gender}</h4>
-        <h4>email address: {this.props.info.email}</h4>
-        <h3>Friends:</h3>
-        {this.renderFriends()}
-        <h3>Persons you maybe know:</h3>
-        {this.renderSugestedFriends()}
+        <PersonalInfo info={this.props.info}/>
+        <FriendsList friends={this.state.friends} seeFriendFriends={this.handleSeeFriendFriends}/>
+        {renderPopup()}
+        <SugestedFriendsList friends={this.state.sugestedFriends} seeFriendFriends={this.handleSeeFriendFriends}/>
       </div>
     );
   }
