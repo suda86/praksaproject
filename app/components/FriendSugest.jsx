@@ -1,8 +1,10 @@
 const React = require('react');
+const axios = require('axios');
 
 var FriendSugest = React.createClass({
   seeFriends: function() {
     // console.log(this.props.friends);
+    var {myFriends} = this.props;
     var friendsIds = this.props.friends;
     var friendsComplete = friendsIds.map((friendId) => {
       return axios.get(`/api/getuser/${friendId}`).then((res) => {
@@ -12,7 +14,7 @@ var FriendSugest = React.createClass({
       });
     });
     return Promise.all(friendsComplete).then((friends) => {
-      this.props.onSeeFriendsClick(friends);
+      this.props.onSeeFriendsClick(friends, myFriends);
     });
   },
   render: function() {

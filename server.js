@@ -68,7 +68,7 @@ app.post('/api/sugestedFriends', (req, res) => {
   var userFriendsId = req.body.friends;
   var allFriendsFriends = getAllFriendsNames(userFriendsId);
   return Promise.all(allFriendsFriends).then((allFriends) => {
-    var sugestedFriendsIds = sugestFriends(allFriends, userId);
+    var sugestedFriendsIds = sugestFriends(allFriends, userId, userFriendsId);
     var friendsAll = returnFriendsNames(sugestedFriendsIds);
     return Promise.all(friendsAll)
   })

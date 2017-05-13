@@ -1,5 +1,5 @@
 
-function sugestFriends(arr, me) {
+function sugestFriends(arr, me, myFriends) {
   var sugestedFriends = [];
   for(let i = 1; i< arr.length; i++) {
     for(let j = 0; j < arr[i].length; j++) {
@@ -13,7 +13,7 @@ function sugestFriends(arr, me) {
     }
   }
   return sugestedFriends.filter((item) => {
-    return item !== me;
+    return item !== me && myFriends.indexOf(item) === -1;
   });
 }
 

@@ -24,7 +24,7 @@ var PopupFriend = React.createClass({
         <p>Age: {this.props.age}</p>
         <p>Gender: {this.props.gender}</p>
         <p>Email address: {this.props.email}</p>
-        <button>Remove from friend list</button>
+        <button>Send friend request</button>
         <button onClick={this.seeFriends} >see friends</button>
       </div>
     );

@@ -18,7 +18,9 @@ var PopupList = React.createClass({
     return (
       <div className="popup-list">
         {renderFriends()}
-        <button onClick={this.onCloseClick}>Close</button>
+        <br />
+        <br />
+        <button className="close-popup-button" onClick={this.onCloseClick}>Close</button>
       </div>
     );
   }

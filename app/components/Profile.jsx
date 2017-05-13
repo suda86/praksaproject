@@ -45,7 +45,10 @@ var Profile = React.createClass({
       });
     });
   },
-  handleSeeFriendFriends: function(friendFriends) {
+  handleSeeFriendFriends: function(friendFriends, myFriends) {
+    friendFriends = friendFriends.filter((friend) => {
+      return myFriends.indexOf(friend._id) === -1;
+    });
     this.setState({
       friendsFriends: friendFriends,
       popup: true
@@ -73,9 +76,9 @@ var Profile = React.createClass({
     return (
       <div>
         <PersonalInfo info={this.props.info}/>
-        <FriendsList friends={this.state.friends} seeFriendFriends={this.handleSeeFriendFriends}/>
         {renderPopup()}
-        <SugestedFriendsList friends={this.state.sugestedFriends} seeFriendFriends={this.handleSeeFriendFriends}/>
+        <FriendsList myFriends={this.props.info.userFriends} friends={this.state.friends} seeFriendFriends={this.handleSeeFriendFriends}/>
+        <SugestedFriendsList myFriends={this.props.info.userFriends} friends={this.state.sugestedFriends} seeFriendFriends={this.handleSeeFriendFriends}/>
       </div>
     );
   }
