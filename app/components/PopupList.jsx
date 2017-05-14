@@ -7,11 +7,12 @@ var PopupList = React.createClass({
     this.props.onClosePopup();
   },
   render: function() {
+    var {myFriends} = this.props;
     var  {friends} = this.props;
     var renderFriends = () => {
       return friends.map((friend) => {
         return (
-          <PopupFriend key={friend._id} {...friend} onSeeFriendsClick={this.props.seeFriendFriends}/>
+          <PopupFriend key={friend._id} {...friend} myFriends={myFriends} onSeeFriendsClick={this.props.seeFriendFriends}/>
         );
       });
     }

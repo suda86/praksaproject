@@ -63,7 +63,7 @@ var Profile = React.createClass({
     var renderPopup = () => {
       if(this.state.popup) {
         return (
-          <PopupList friends={this.state.friendsFriends} seeFriendFriends={this.handleSeeFriendFriends} onClosePopup={this.handleClosePopup}/>
+          <PopupList myFriends={this.props.info.userFriends} friends={this.state.friendsFriends} seeFriendFriends={this.handleSeeFriendFriends} onClosePopup={this.handleClosePopup}/>
         );
       } else {
         return (

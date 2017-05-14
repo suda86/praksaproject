@@ -4,6 +4,7 @@ const axios = require('axios');
 var PopupFriend = React.createClass({
   seeFriends: function() {
     // console.log(this.props.friends);
+    var myFriends = this.props.myFriends;
     var friendsIds = this.props.friends;
     var friendsComplete = friendsIds.map((friendId) => {
       return axios.get(`/api/getuser/${friendId}`).then((res) => {
@@ -13,7 +14,7 @@ var PopupFriend = React.createClass({
       });
     });
     return Promise.all(friendsComplete).then((friends) => {
-      this.props.onSeeFriendsClick(friends);
+      this.props.onSeeFriendsClick(friends, myFriends);
     });
   },
   render: function() {

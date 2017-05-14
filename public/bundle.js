@@ -23440,7 +23440,7 @@
 
 	    var renderPopup = function renderPopup() {
 	      if (_this3.state.popup) {
-	        return React.createElement(PopupList, { friends: _this3.state.friendsFriends, seeFriendFriends: _this3.handleSeeFriendFriends, onClosePopup: _this3.handleClosePopup });
+	        return React.createElement(PopupList, { myFriends: _this3.props.info.userFriends, friends: _this3.state.friendsFriends, seeFriendFriends: _this3.handleSeeFriendFriends, onClosePopup: _this3.handleClosePopup });
 	      } else {
 	        return React.createElement('div', null);
 	      }
@@ -23771,11 +23771,12 @@
 	  render: function render() {
 	    var _this = this;
 
+	    var myFriends = this.props.myFriends;
 	    var friends = this.props.friends;
 
 	    var renderFriends = function renderFriends() {
 	      return friends.map(function (friend) {
-	        return React.createElement(PopupFriend, _extends({ key: friend._id }, friend, { onSeeFriendsClick: _this.props.seeFriendFriends }));
+	        return React.createElement(PopupFriend, _extends({ key: friend._id }, friend, { myFriends: myFriends, onSeeFriendsClick: _this.props.seeFriendFriends }));
 	      });
 	    };
 	    return React.createElement(
@@ -23811,6 +23812,7 @@
 	    var _this = this;
 
 	    // console.log(this.props.friends);
+	    var myFriends = this.props.myFriends;
 	    var friendsIds = this.props.friends;
 	    var friendsComplete = friendsIds.map(function (friendId) {
 	      return axios.get('/api/getuser/' + friendId).then(function (res) {
@@ -23820,7 +23822,7 @@
 	      });
 	    });
 	    return Promise.all(friendsComplete).then(function (friends) {
-	      _this.props.onSeeFriendsClick(friends);
+	      _this.props.onSeeFriendsClick(friends, myFriends);
 	    });
 	  },
 	  render: function render() {
