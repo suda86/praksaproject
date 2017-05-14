@@ -19761,8 +19761,8 @@
 
 	var Profile = __webpack_require__(189);
 
-	var Registracija = __webpack_require__(197);
-	var Login = __webpack_require__(198);
+	var Registracija = __webpack_require__(199);
+	var Login = __webpack_require__(200);
 
 	var Main = React.createClass({
 	  displayName: 'Main',
@@ -23376,16 +23376,15 @@
 	var SugestedFriendsList = __webpack_require__(193);
 	var PopupList = __webpack_require__(195);
 
+	var sugestFriends = __webpack_require__(197);
+	var allUserInfoFromId = __webpack_require__(198);
+
 	var Profile = React.createClass({
 	  displayName: 'Profile',
 
 	  getInitialState: function getInitialState() {
-	    var friendsIds = this.props.info.userFriends;
-	    var friendsObj = friendsIds.map(function (id) {
-	      return { _id: id };
-	    });
 	    return {
-	      friends: friendsObj,
+	      friends: [],
 	      sugestedFriends: [],
 	      friendsFriends: [],
 	      popup: false
@@ -23394,15 +23393,8 @@
 	  componentWillMount: function componentWillMount() {
 	    var _this = this;
 
-	    var friends = this.state.friends;
-	    var newState = friends.map(function (friend) {
-	      return axios.get('/api/getuser/' + friend._id).then(function (res) {
-	        return res.data;
-	      }).catch(function (e) {
-	        console.log(e);
-	      });
-	    });
-	    return Promise.all(newState).then(function (friends) {
+	    var friendsById = this.props.info.userFriends;
+	    allUserInfoFromId(friendsById).then(function (friends) {
 	      _this.setState({
 	        friends: friends
 	      });
@@ -23411,19 +23403,17 @@
 	  componentDidMount: function componentDidMount() {
 	    var _this2 = this;
 
-	    axios.post('/api/sugestedFriends', {
-	      email: this.props.info.email,
-	      friends: this.props.info.userFriends,
-	      me: this.props.info.id
-	    }).then(function (res) {
+	    sugestFriends(this.props.info).then(function (res) {
 	      _this2.setState({
 	        sugestedFriends: res.data
 	      });
 	    });
 	  },
 	  handleSeeFriendFriends: function handleSeeFriendFriends(friendFriends, myFriends) {
+	    var _this3 = this;
+
 	    friendFriends = friendFriends.filter(function (friend) {
-	      return myFriends.indexOf(friend._id) === -1;
+	      return myFriends.indexOf(friend._id) === -1 && friend._id !== _this3.props.info.id;
 	    });
 	    this.setState({
 	      friendsFriends: friendFriends,
@@ -23435,12 +23425,75 @@
 	      popup: false
 	    });
 	  },
+	  handleRemoveFriend: function handleRemoveFriend(newUserInfo) {
+	    var _this4 = this;
+
+	    allUserInfoFromId(newUserInfo.friends).then(function (friends) {
+	      _this4.setState({
+	        friends: friends
+	      });
+	    }).then(function () {
+	      sugestFriends({ email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id }).then(function (res) {
+	        console.log(res);
+	        console.log('sasa');
+	        _this4.setState({
+	          sugestedFriends: res.data
+	        });
+	      });
+	    }).catch(function (e) {
+	      console.log(e);
+	    });
+	  },
+	  handleAddFriendClick: function handleAddFriendClick(newUserInfo) {
+	    var _this5 = this;
+
+	    allUserInfoFromId(newUserInfo.friends).then(function (friends) {
+	      _this5.setState({
+	        friends: friends
+	      });
+	    }).then(function () {
+	      sugestFriends({ email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id }).then(function (res) {
+	        console.log(res);
+	        console.log('sasa');
+	        _this5.setState({
+	          sugestedFriends: res.data
+	        });
+	      });
+	    }).catch(function (e) {
+	      console.log(e);
+	    });
+	  },
+	  handleAddFriendClickFromPopup: function handleAddFriendClickFromPopup(newUserInfo, addedFriendId) {
+	    var _this6 = this;
+
+	    allUserInfoFromId(newUserInfo.friends).then(function (friends) {
+	      _this6.setState({
+	        friends: friends
+	      });
+	    }).then(function () {
+	      sugestFriends({ email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id }).then(function (res) {
+	        console.log(res);
+	        console.log('sasa');
+	        _this6.setState({
+	          sugestedFriends: res.data
+	        });
+	      });
+	    }).catch(function (e) {
+	      console.log(e);
+	    });
+	    var newFriendsFriends = this.state.friendsFriends.filter(function (fFriend) {
+	      return fFriend._id !== addedFriendId;
+	    });
+	    this.setState({
+	      friendsFriends: newFriendsFriends
+	    });
+	  },
 	  render: function render() {
-	    var _this3 = this;
+	    var _this7 = this;
 
 	    var renderPopup = function renderPopup() {
-	      if (_this3.state.popup) {
-	        return React.createElement(PopupList, { myFriends: _this3.props.info.userFriends, friends: _this3.state.friendsFriends, seeFriendFriends: _this3.handleSeeFriendFriends, onClosePopup: _this3.handleClosePopup });
+	      if (_this7.state.popup) {
+	        return React.createElement(PopupList, { myFriends: _this7.props.info.userFriends, onAddFriendFromPopup: _this7.handleAddFriendClickFromPopup, me: _this7.props.info, friends: _this7.state.friendsFriends, seeFriendFriends: _this7.handleSeeFriendFriends, onClosePopup: _this7.handleClosePopup });
 	      } else {
 	        return React.createElement('div', null);
 	      }
@@ -23450,8 +23503,8 @@
 	      null,
 	      React.createElement(PersonalInfo, { info: this.props.info }),
 	      renderPopup(),
-	      React.createElement(FriendsList, { myFriends: this.props.info.userFriends, friends: this.state.friends, seeFriendFriends: this.handleSeeFriendFriends }),
-	      React.createElement(SugestedFriendsList, { myFriends: this.props.info.userFriends, friends: this.state.sugestedFriends, seeFriendFriends: this.handleSeeFriendFriends })
+	      React.createElement(FriendsList, { me: this.props.info, friends: this.state.friends, onRemoveFriend: this.handleRemoveFriend, seeFriendFriends: this.handleSeeFriendFriends }),
+	      React.createElement(SugestedFriendsList, { me: this.props.info, onAddFriend: this.handleAddFriendClick, myFriends: this.props.info.userFriends, friends: this.state.sugestedFriends, seeFriendFriends: this.handleSeeFriendFriends })
 	    );
 	  }
 	});
@@ -23527,12 +23580,12 @@
 	  render: function render() {
 	    var _this = this;
 
-	    var myFriends = this.props.myFriends;
+	    var me = this.props.me;
 	    var friends = this.props.friends;
 
 	    var renderFriends = function renderFriends() {
 	      return friends.map(function (friend) {
-	        return React.createElement(Friend, _extends({ key: friend._id }, friend, { myFriends: myFriends, onSeeFriendsClick: _this.props.seeFriendFriends }));
+	        return React.createElement(Friend, _extends({ key: friend._id }, friend, { me: me, onRemoveFriend: _this.props.onRemoveFriend, onSeeFriendsClick: _this.props.seeFriendFriends }));
 	      });
 	    };
 	    return React.createElement(
@@ -23562,11 +23615,25 @@
 	var Friend = React.createClass({
 	  displayName: 'Friend',
 
-	  seeFriends: function seeFriends() {
+	  onRemoveFriendClick: function onRemoveFriendClick() {
 	    var _this = this;
 
+	    var friendId = this.props._id;
+	    var myId = this.props.me.id;
+	    axios.post('/api/removeFriend', {
+	      me: myId,
+	      deleteFriend: friendId
+	    }).then(function (res) {
+	      _this.props.onRemoveFriend(res.data);
+	    }).catch(function (e) {
+	      console.log(e);
+	    });
+	  },
+	  seeFriends: function seeFriends() {
+	    var _this2 = this;
+
 	    // console.log(this.props.friends);
-	    var myFriends = this.props.myFriends;
+	    var myFriends = this.props.me.userFriends;
 	    var friendsIds = this.props.friends;
 	    var friendsComplete = friendsIds.map(function (friendId) {
 	      return axios.get('/api/getuser/' + friendId).then(function (res) {
@@ -23576,7 +23643,7 @@
 	      });
 	    });
 	    return Promise.all(friendsComplete).then(function (friends) {
-	      _this.props.onSeeFriendsClick(friends, myFriends);
+	      _this2.props.onSeeFriendsClick(friends, myFriends);
 	    });
 	  },
 	  render: function render() {
@@ -23615,7 +23682,7 @@
 	      ),
 	      React.createElement(
 	        'button',
-	        null,
+	        { onClick: this.onRemoveFriendClick },
 	        'Remove from friend list'
 	      ),
 	      React.createElement(
@@ -23652,7 +23719,7 @@
 
 	    var renderFriends = function renderFriends() {
 	      return friends.map(function (friend) {
-	        return React.createElement(FriendSugest, _extends({ key: friend._id }, friend, { myFriends: myFriends, onSeeFriendsClick: _this.props.seeFriendFriends }));
+	        return React.createElement(FriendSugest, _extends({ key: friend._id }, friend, { onAddFriend: _this.props.onAddFriend, me: _this.props.me, myFriends: myFriends, onSeeFriendsClick: _this.props.seeFriendFriends }));
 	      });
 	    };
 	    return React.createElement(
@@ -23700,6 +23767,20 @@
 	      _this.props.onSeeFriendsClick(friends, myFriends);
 	    });
 	  },
+	  onAddFriendClick: function onAddFriendClick() {
+	    var _this2 = this;
+
+	    var userId = this.props._id;
+	    var myId = this.props.me.id;
+	    axios.post('/api/addFriend', {
+	      me: myId,
+	      friend: userId
+	    }).then(function (res) {
+	      _this2.props.onAddFriend(res.data);
+	    }).catch(function (e) {
+	      console.log(e);
+	    });
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
@@ -23736,8 +23817,8 @@
 	      ),
 	      React.createElement(
 	        'button',
-	        null,
-	        'send friend request'
+	        { onClick: this.onAddFriendClick },
+	        'add to friends'
 	      ),
 	      React.createElement(
 	        'button',
@@ -23776,7 +23857,7 @@
 
 	    var renderFriends = function renderFriends() {
 	      return friends.map(function (friend) {
-	        return React.createElement(PopupFriend, _extends({ key: friend._id }, friend, { myFriends: myFriends, onSeeFriendsClick: _this.props.seeFriendFriends }));
+	        return React.createElement(PopupFriend, _extends({ key: friend._id }, friend, { onAddFriendFromPopup: _this.props.onAddFriendFromPopup, me: _this.props.me, myFriends: myFriends, onSeeFriendsClick: _this.props.seeFriendFriends }));
 	      });
 	    };
 	    return React.createElement(
@@ -23825,6 +23906,21 @@
 	      _this.props.onSeeFriendsClick(friends, myFriends);
 	    });
 	  },
+	  addFriend: function addFriend() {
+	    var _this2 = this;
+
+	    var userId = this.props._id;
+	    var myId = this.props.me.id;
+	    console.log(userId, myId);
+	    axios.post('/api/addFriend', {
+	      me: myId,
+	      friend: userId
+	    }).then(function (res) {
+	      _this2.props.onAddFriendFromPopup(res.data, userId);
+	    }).catch(function (e) {
+	      console.log(e);
+	    });
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
@@ -23861,8 +23957,8 @@
 	      ),
 	      React.createElement(
 	        'button',
-	        null,
-	        'Send friend request'
+	        { onClick: this.addFriend },
+	        'add to friends'
 	      ),
 	      React.createElement(
 	        'button',
@@ -23877,6 +23973,46 @@
 
 /***/ }),
 /* 197 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var axios = __webpack_require__(160);
+
+	var sugestFriends = function sugestFriends(me) {
+	  return axios.post('/api/sugestedFriends', {
+	    email: me.email,
+	    friends: me.userFriends,
+	    me: me.id
+	  });
+	};
+
+	module.exports = sugestFriends;
+
+/***/ }),
+/* 198 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var axios = __webpack_require__(160);
+
+	var allUserInfoFromId = function allUserInfoFromId(arrId) {
+	  // var friends = this.state.friends;
+	  var fullUserInfo = arrId.map(function (id) {
+	    return axios.get('/api/getuser/' + id).then(function (res) {
+	      return res.data;
+	    }).catch(function (e) {
+	      console.log(e);
+	    });
+	  });
+	  return Promise.all(fullUserInfo);
+	};
+
+	module.exports = allUserInfoFromId;
+
+/***/ }),
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23963,7 +24099,7 @@
 	module.exports = Registracija;
 
 /***/ }),
-/* 198 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';

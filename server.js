@@ -77,6 +77,40 @@ app.post('/api/sugestedFriends', (req, res) => {
     });
 });
 
+app.post('/api/removeFriend', (req, res) => {
+  var myId = req.body.me;
+  var deleteFriendId = req.body.deleteFriend;
+  User.findOneAndUpdate({'_id': myId}, {$pull:{friends: deleteFriendId}}, {new: true})
+    .then((data) => {
+      res.send(data);
+      console.log('uspesna prva');
+    });
+  User.findOneAndUpdate({'_id': deleteFriendId}, {$pull:{friends: myId}}, {new: true})
+    .then((data) => {
+      console.log('uspesna druga');
+    }).catch((e) => {
+      console.log(e);
+    });
+});
+
+app.post('/api/addFriend', (req, res) => {
+  var myId = req.body.me;
+  var friendId = req.body.friend;
+  User.findOneAndUpdate({'_id': myId}, {$addToSet:{friends: friendId}}, {new: true})
+    .then((data) => {
+      res.send(data);
+      console.log('dodata prva');
+    }).catch((e) => {
+      console.log(e);
+    });
+  User.findOneAndUpdate({'_id': friendId}, {$addToSet:{friends: myId}}, {new: true})
+    .then((data) => {
+      console.log('dodata druga');
+    }).catch((e) => {
+      console.log(e);
+    });
+});
+
 app.listen(PORT, function () {
   console.log(`Express server is up on ${PORT}`);
 });

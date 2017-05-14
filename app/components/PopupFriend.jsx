@@ -17,6 +17,19 @@ var PopupFriend = React.createClass({
       this.props.onSeeFriendsClick(friends, myFriends);
     });
   },
+  addFriend: function() {
+    var userId = this.props._id;
+    var myId = this.props.me.id;
+    console.log(userId, myId);
+    axios.post('/api/addFriend', {
+      me: myId,
+      friend: userId
+    }).then((res) => {
+      this.props.onAddFriendFromPopup(res.data, userId);
+    }).catch((e) => {
+      console.log(e);
+    });
+  },
   render: function() {
     return (
       <div className="friends-friends-list">
@@ -25,7 +38,7 @@ var PopupFriend = React.createClass({
         <p>Age: {this.props.age}</p>
         <p>Gender: {this.props.gender}</p>
         <p>Email address: {this.props.email}</p>
-        <button>Send friend request</button>
+        <button onClick={this.addFriend} >add to friends</button>
         <button onClick={this.seeFriends} >see friends</button>
       </div>
     );

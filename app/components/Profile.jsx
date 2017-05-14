@@ -6,40 +6,30 @@ const FriendsList = require('./FriendsList');
 const SugestedFriendsList = require('./SugestedFriendsList');
 const PopupList = require('./PopupList');
 
+const sugestFriends = require('../cliFunctions/sugestFriends');
+const allUserInfoFromId = require('../cliFunctions/allUserInfoFromId');
+
 var Profile = React.createClass({
   getInitialState: function() {
-    var friendsIds = this.props.info.userFriends;
-    var friendsObj = friendsIds.map((id) => {
-      return {_id: id}
-    })
     return {
-      friends: friendsObj,
+      friends: [],
       sugestedFriends: [],
       friendsFriends: [],
       popup: false
     }
   },
   componentWillMount: function() {
-    var friends = this.state.friends;
-    var newState = friends.map((friend) => {
-      return axios.get(`/api/getuser/${friend._id}`).then((res) => {
-        return res.data;
-      }).catch((e) => {
-        console.log(e);
+    var friendsById = this.props.info.userFriends;
+    allUserInfoFromId(friendsById)
+      .then((friends) => {
+        this.setState({
+          friends: friends
+        });
       });
-    });
-    return Promise.all(newState).then((friends) => {
-      this.setState({
-        friends: friends
-      });
-    });
   },
   componentDidMount: function() {
-    axios.post('/api/sugestedFriends', {
-      email: this.props.info.email,
-      friends: this.props.info.userFriends,
-      me: this.props.info.id
-    }).then((res) => {
+    sugestFriends(this.props.info)
+    .then((res) => {
       this.setState({
         sugestedFriends: res.data
       });
@@ -47,7 +37,7 @@ var Profile = React.createClass({
   },
   handleSeeFriendFriends: function(friendFriends, myFriends) {
     friendFriends = friendFriends.filter((friend) => {
-      return myFriends.indexOf(friend._id) === -1;
+      return myFriends.indexOf(friend._id) === -1 && friend._id !== this.props.info.id;
     });
     this.setState({
       friendsFriends: friendFriends,
@@ -59,11 +49,74 @@ var Profile = React.createClass({
       popup: false
     });
   },
+  handleRemoveFriend: function(newUserInfo) {
+    allUserInfoFromId(newUserInfo.friends)
+      .then((friends) => {
+        this.setState({
+          friends: friends
+        });
+      }).then(() => {
+        sugestFriends({email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id})
+        .then((res) => {
+          console.log(res);
+          console.log('sasa');
+          this.setState({
+            sugestedFriends: res.data
+          });
+        });
+      }).catch((e) => {
+        console.log(e);
+      });
+  },
+  handleAddFriendClick: function(newUserInfo) {
+    allUserInfoFromId(newUserInfo.friends)
+      .then((friends) => {
+        this.setState({
+          friends: friends
+        });
+      }).then(() => {
+        sugestFriends({email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id})
+        .then((res) => {
+          console.log(res);
+          console.log('sasa');
+          this.setState({
+            sugestedFriends: res.data
+          });
+        });
+      }).catch((e) => {
+        console.log(e);
+      });
+  },
+  handleAddFriendClickFromPopup: function(newUserInfo, addedFriendId) {
+    allUserInfoFromId(newUserInfo.friends)
+      .then((friends) => {
+        this.setState({
+          friends: friends
+        });
+      }).then(() => {
+        sugestFriends({email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id})
+        .then((res) => {
+          console.log(res);
+          console.log('sasa');
+          this.setState({
+            sugestedFriends: res.data
+          });
+        });
+      }).catch((e) => {
+        console.log(e);
+      });
+      var newFriendsFriends = this.state.friendsFriends.filter((fFriend) => {
+        return fFriend._id !== addedFriendId
+      });
+      this.setState({
+        friendsFriends: newFriendsFriends
+      })
+  },
   render: function() {
     var renderPopup = () => {
       if(this.state.popup) {
         return (
-          <PopupList myFriends={this.props.info.userFriends} friends={this.state.friendsFriends} seeFriendFriends={this.handleSeeFriendFriends} onClosePopup={this.handleClosePopup}/>
+          <PopupList myFriends={this.props.info.userFriends} onAddFriendFromPopup={this.handleAddFriendClickFromPopup} me={this.props.info} friends={this.state.friendsFriends} seeFriendFriends={this.handleSeeFriendFriends} onClosePopup={this.handleClosePopup}/>
         );
       } else {
         return (
@@ -77,8 +130,8 @@ var Profile = React.createClass({
       <div>
         <PersonalInfo info={this.props.info}/>
         {renderPopup()}
-        <FriendsList myFriends={this.props.info.userFriends} friends={this.state.friends} seeFriendFriends={this.handleSeeFriendFriends}/>
-        <SugestedFriendsList myFriends={this.props.info.userFriends} friends={this.state.sugestedFriends} seeFriendFriends={this.handleSeeFriendFriends}/>
+        <FriendsList me={this.props.info} friends={this.state.friends} onRemoveFriend={this.handleRemoveFriend} seeFriendFriends={this.handleSeeFriendFriends}/>
+        <SugestedFriendsList me={this.props.info} onAddFriend={this.handleAddFriendClick} myFriends={this.props.info.userFriends} friends={this.state.sugestedFriends} seeFriendFriends={this.handleSeeFriendFriends}/>
       </div>
     );
   }

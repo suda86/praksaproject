@@ -17,6 +17,18 @@ var FriendSugest = React.createClass({
       this.props.onSeeFriendsClick(friends, myFriends);
     });
   },
+  onAddFriendClick: function() {
+    var userId = this.props._id;
+    var myId = this.props.me.id;
+    axios.post('/api/addFriend', {
+      me: myId,
+      friend: userId
+    }).then((res) => {
+      this.props.onAddFriend(res.data);
+    }).catch((e) => {
+      console.log(e);
+    });
+  },
   render: function() {
     return (
       <div className="friend">
@@ -25,7 +37,7 @@ var FriendSugest = React.createClass({
         <p>Age: {this.props.age}</p>
         <p>Gender: {this.props.gender}</p>
         <p>Email address: {this.props.email}</p>
-        <button>send friend request</button>
+        <button onClick={this.onAddFriendClick}>add to friends</button>
         <button onClick={this.seeFriends}>see friends</button>
       </div>
     );

@@ -9,7 +9,7 @@ var SugestedFriendsList = React.createClass({
     var renderFriends = () => {
       return friends.map((friend) => {
         return (
-          <FriendSugest key={friend._id} {...friend} myFriends={myFriends} onSeeFriendsClick={this.props.seeFriendFriends}/>
+          <FriendSugest key={friend._id} {...friend} onAddFriend={this.props.onAddFriend} me={this.props.me} myFriends={myFriends} onSeeFriendsClick={this.props.seeFriendFriends}/>
         );
       });
     }
