@@ -3,7 +3,7 @@ const React = require('react');
 var Registracija = React.createClass({
   getInitialState: function() {
     return {
-      gender: ''
+      gender: 'male'
     }
   },
   handleGenderChange: function(e) {
@@ -17,7 +17,7 @@ var Registracija = React.createClass({
     var lastName = this.refs.lastName.value;
     var email = this.refs.email.value;
     var password = this.refs.password.value;
-    var age = this.refs.age.value;
+    var age = this.refs.age.value || null;
     var gender = this.state.gender;
     this.refs.firstName.value = '';
     this.refs.lastName.value = '';
@@ -40,7 +40,7 @@ var Registracija = React.createClass({
           <input type="text" ref="lastName"/><br/>
           <input type="email" ref="email" required></input><br/>
           <input type="password" ref="password" required></input><br/>
-          <input type="number" ref="age" required></input><br/>
+          <input type="number" ref="age" ></input><br/>
           <input type="radio" value="male" checked={this.state.gender === 'male'} onChange={this.handleGenderChange}/> Male
           <input type="radio" value="female" checked={this.state.gender === 'female'} onChange={this.handleGenderChange}/> Female<br/>
           <button>register</button>

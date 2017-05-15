@@ -8,8 +8,23 @@ var Login = require('./Login');
 
 var Main = React.createClass({
   getInitialState: function() {
-    return {
-      page: 'register'
+    if(localStorage.getItem('projekatPraksa')) {
+      var state = JSON.parse(localStorage.getItem('projekatPraksa'));
+      console.log(state);
+      return {
+        id: state.id,
+        firstName: state.firstName,
+        lastName: state.lastName,
+        email: state.email,
+        age: state.age,
+        gender: state.gender,
+        userFriends: state.userFriends,
+        page: state.page
+      }
+    } else {
+      return {
+        page: 'register'
+      }
     }
   },
 
@@ -37,6 +52,7 @@ var Main = React.createClass({
       email: loginInfo.email,
       password: loginInfo.password
     }).then((res) => {
+      localStorage.setItem('projekatPraksa', JSON.stringify(res.data));
       this.setState({
         id: res.data.id,
         firstName: res.data.firstName,
@@ -49,6 +65,17 @@ var Main = React.createClass({
       });
     });
   },
+  handleGoToRegister: function() {
+    this.setState({
+      page: 'register'
+    });
+  },
+  handleLogout: function() {
+    localStorage.removeItem('projekatPraksa');
+    this.setState({
+      page: 'login'
+    });
+  },
   rendering: function () {
     if(this.state.page === 'register') {
       return (
@@ -56,12 +83,12 @@ var Main = React.createClass({
       );
     } else if (this.state.page === 'login') {
       return (
-        <Login onLogin={this.handleLogin}/>
+        <Login goToRegisterPage={this.handleGoToRegister} onLogin={this.handleLogin}/>
       );
     } else if(this.state.page === 'profile') {
       return (
         <div>
-          <Profile info={this.state}/>
+          <Profile onLogoutClick={this.handleLogout} info={this.state}/>
         </div>
       )
     }

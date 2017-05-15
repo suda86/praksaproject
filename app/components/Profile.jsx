@@ -50,6 +50,10 @@ var Profile = React.createClass({
     });
   },
   handleRemoveFriend: function(newUserInfo) {
+    newUserInfo.page = 'profile';
+    newUserInfo.userFriends = newUserInfo.friends;
+    newUserInfo.id = newUserInfo._id;
+    localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
     allUserInfoFromId(newUserInfo.friends)
       .then((friends) => {
         this.setState({
@@ -69,6 +73,12 @@ var Profile = React.createClass({
       });
   },
   handleAddFriendClick: function(newUserInfo) {
+    newUserInfo.page = 'profile';
+    newUserInfo.id = newUserInfo._id;
+    newUserInfo.userFriends = newUserInfo.friends;
+    localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
+    console.log(newUserInfo);
+    console.log(localStorage.getItem('projekatPraksa'));
     allUserInfoFromId(newUserInfo.friends)
       .then((friends) => {
         this.setState({
@@ -88,6 +98,10 @@ var Profile = React.createClass({
       });
   },
   handleAddFriendClickFromPopup: function(newUserInfo, addedFriendId) {
+    newUserInfo.page = 'profile';
+    newUserInfo.id = newUserInfo._id;
+    newUserInfo.userFriends = newUserInfo.friends;
+    localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
     allUserInfoFromId(newUserInfo.friends)
       .then((friends) => {
         this.setState({
@@ -112,6 +126,9 @@ var Profile = React.createClass({
         friendsFriends: newFriendsFriends
       })
   },
+  onLogoutClick: function() {
+    this.props.onLogoutClick();
+  },
   render: function() {
     var renderPopup = () => {
       if(this.state.popup) {
@@ -128,6 +145,7 @@ var Profile = React.createClass({
     };
     return (
       <div>
+        <button onClick={this.onLogoutClick}>logout</button>
         <PersonalInfo info={this.props.info}/>
         {renderPopup()}
         <FriendsList me={this.props.info} friends={this.state.friends} onRemoveFriend={this.handleRemoveFriend} seeFriendFriends={this.handleSeeFriendFriends}/>

@@ -19768,9 +19768,24 @@
 	  displayName: 'Main',
 
 	  getInitialState: function getInitialState() {
-	    return {
-	      page: 'register'
-	    };
+	    if (localStorage.getItem('projekatPraksa')) {
+	      var state = JSON.parse(localStorage.getItem('projekatPraksa'));
+	      console.log(state);
+	      return {
+	        id: state.id,
+	        firstName: state.firstName,
+	        lastName: state.lastName,
+	        email: state.email,
+	        age: state.age,
+	        gender: state.gender,
+	        userFriends: state.userFriends,
+	        page: state.page
+	      };
+	    } else {
+	      return {
+	        page: 'register'
+	      };
+	    }
 	  },
 
 	  handleRegistration: function handleRegistration(regInfo) {
@@ -19801,6 +19816,7 @@
 	      email: loginInfo.email,
 	      password: loginInfo.password
 	    }).then(function (res) {
+	      localStorage.setItem('projekatPraksa', JSON.stringify(res.data));
 	      _this2.setState({
 	        id: res.data.id,
 	        firstName: res.data.firstName,
@@ -19813,16 +19829,27 @@
 	      });
 	    });
 	  },
+	  handleGoToRegister: function handleGoToRegister() {
+	    this.setState({
+	      page: 'register'
+	    });
+	  },
+	  handleLogout: function handleLogout() {
+	    localStorage.removeItem('projekatPraksa');
+	    this.setState({
+	      page: 'login'
+	    });
+	  },
 	  rendering: function rendering() {
 	    if (this.state.page === 'register') {
 	      return React.createElement(Registracija, { onRegistration: this.handleRegistration, onLoginButtonClick: this.handleLoginButtonClick });
 	    } else if (this.state.page === 'login') {
-	      return React.createElement(Login, { onLogin: this.handleLogin });
+	      return React.createElement(Login, { goToRegisterPage: this.handleGoToRegister, onLogin: this.handleLogin });
 	    } else if (this.state.page === 'profile') {
 	      return React.createElement(
 	        'div',
 	        null,
-	        React.createElement(Profile, { info: this.state })
+	        React.createElement(Profile, { onLogoutClick: this.handleLogout, info: this.state })
 	      );
 	    }
 	  },
@@ -23426,6 +23453,10 @@
 	  handleRemoveFriend: function handleRemoveFriend(newUserInfo) {
 	    var _this4 = this;
 
+	    newUserInfo.page = 'profile';
+	    newUserInfo.userFriends = newUserInfo.friends;
+	    newUserInfo.id = newUserInfo._id;
+	    localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
 	    allUserInfoFromId(newUserInfo.friends).then(function (friends) {
 	      _this4.setState({
 	        friends: friends
@@ -23445,6 +23476,12 @@
 	  handleAddFriendClick: function handleAddFriendClick(newUserInfo) {
 	    var _this5 = this;
 
+	    newUserInfo.page = 'profile';
+	    newUserInfo.id = newUserInfo._id;
+	    newUserInfo.userFriends = newUserInfo.friends;
+	    localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
+	    console.log(newUserInfo);
+	    console.log(localStorage.getItem('projekatPraksa'));
 	    allUserInfoFromId(newUserInfo.friends).then(function (friends) {
 	      _this5.setState({
 	        friends: friends
@@ -23464,6 +23501,10 @@
 	  handleAddFriendClickFromPopup: function handleAddFriendClickFromPopup(newUserInfo, addedFriendId) {
 	    var _this6 = this;
 
+	    newUserInfo.page = 'profile';
+	    newUserInfo.id = newUserInfo._id;
+	    newUserInfo.userFriends = newUserInfo.friends;
+	    localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
 	    allUserInfoFromId(newUserInfo.friends).then(function (friends) {
 	      _this6.setState({
 	        friends: friends
@@ -23486,6 +23527,9 @@
 	      friendsFriends: newFriendsFriends
 	    });
 	  },
+	  onLogoutClick: function onLogoutClick() {
+	    this.props.onLogoutClick();
+	  },
 	  render: function render() {
 	    var _this7 = this;
 
@@ -23499,6 +23543,11 @@
 	    return React.createElement(
 	      'div',
 	      null,
+	      React.createElement(
+	        'button',
+	        { onClick: this.onLogoutClick },
+	        'logout'
+	      ),
 	      React.createElement(PersonalInfo, { info: this.props.info }),
 	      renderPopup(),
 	      React.createElement(FriendsList, { me: this.props.info, friends: this.state.friends, onRemoveFriend: this.handleRemoveFriend, seeFriendFriends: this.handleSeeFriendFriends }),
@@ -23540,7 +23589,7 @@
 	        "p",
 	        null,
 	        "Genge: ",
-	        this.props.info.genre
+	        this.props.info.gender
 	      ),
 	      React.createElement(
 	        "p",
@@ -24021,7 +24070,7 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      gender: ''
+	      gender: 'male'
 	    };
 	  },
 	  handleGenderChange: function handleGenderChange(e) {
@@ -24035,7 +24084,7 @@
 	    var lastName = this.refs.lastName.value;
 	    var email = this.refs.email.value;
 	    var password = this.refs.password.value;
-	    var age = this.refs.age.value;
+	    var age = this.refs.age.value || null;
 	    var gender = this.state.gender;
 	    this.refs.firstName.value = '';
 	    this.refs.lastName.value = '';
@@ -24065,7 +24114,7 @@
 	        React.createElement('br', null),
 	        React.createElement('input', { type: 'password', ref: 'password', required: true }),
 	        React.createElement('br', null),
-	        React.createElement('input', { type: 'number', ref: 'age', required: true }),
+	        React.createElement('input', { type: 'number', ref: 'age' }),
 	        React.createElement('br', null),
 	        React.createElement('input', { type: 'radio', value: 'male', checked: this.state.gender === 'male', onChange: this.handleGenderChange }),
 	        ' Male',
@@ -24114,6 +24163,9 @@
 	    this.refs.password.value = '';
 	    this.props.onLogin({ email: email, password: password });
 	  },
+	  onGoToRegisterClick: function onGoToRegisterClick() {
+	    this.props.goToRegisterPage();
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
@@ -24130,6 +24182,16 @@
 	          'button',
 	          null,
 	          'Login'
+	        ),
+	        React.createElement(
+	          'h4',
+	          null,
+	          'If you dont have account go to register page and make one'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.onGoToRegisterClick },
+	          'go to register page'
 	        )
 	      )
 	    );
