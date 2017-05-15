@@ -56,9 +56,9 @@ var Profile = React.createClass({
           friends: friends
         });
       }).then(() => {
-        sugestFriends({email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id})
+        sugestFriends({userFriends: newUserInfo.friends, id: newUserInfo._id})
         .then((res) => {
-          console.log(res);
+          console.log(newUserInfo._id);
           console.log('sasa');
           this.setState({
             sugestedFriends: res.data
@@ -75,7 +75,7 @@ var Profile = React.createClass({
           friends: friends
         });
       }).then(() => {
-        sugestFriends({email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id})
+        sugestFriends({userFriends: newUserInfo.friends, id: newUserInfo._id})
         .then((res) => {
           console.log(res);
           console.log('sasa');
@@ -94,7 +94,7 @@ var Profile = React.createClass({
           friends: friends
         });
       }).then(() => {
-        sugestFriends({email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id})
+        sugestFriends({userFriends: newUserInfo.friends, id: newUserInfo._id})
         .then((res) => {
           console.log(res);
           console.log('sasa');

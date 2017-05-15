@@ -18,8 +18,7 @@ var UserSchema = new mongoose.Schema({
   },
   age: Number,
   gender: String,
-  friends: [String],
-  request: [String]
+  friends: [String]
 });
 
 

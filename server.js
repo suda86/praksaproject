@@ -39,8 +39,6 @@ app.post('/api/login', (req, res) => {
         age: user.age,
         gender: user.gender,
         userFriends: user.friends,
-        friendRequest: '0',
-        sentRequest: user.request,
         page: 'profile',
       });
     }
@@ -66,6 +64,7 @@ app.get('/api/getuser/:id', (req, res) => {
 app.post('/api/sugestedFriends', (req, res) => {
   var userId = req.body.me;
   var userFriendsId = req.body.friends;
+  console.log(userFriendsId);
   var allFriendsFriends = getAllFriendsNames(userFriendsId);
   return Promise.all(allFriendsFriends).then((allFriends) => {
     var sugestedFriendsIds = sugestFriends(allFriends, userId, userFriendsId);

@@ -19809,8 +19809,6 @@
 	        age: res.data.age,
 	        gender: res.data.gender,
 	        userFriends: res.data.userFriends,
-	        friendRequest: res.data.friendRequest,
-	        sentRequest: res.data.sentRequest,
 	        page: res.data.page
 	      });
 	    });
@@ -23433,8 +23431,8 @@
 	        friends: friends
 	      });
 	    }).then(function () {
-	      sugestFriends({ email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id }).then(function (res) {
-	        console.log(res);
+	      sugestFriends({ userFriends: newUserInfo.friends, id: newUserInfo._id }).then(function (res) {
+	        console.log(newUserInfo._id);
 	        console.log('sasa');
 	        _this4.setState({
 	          sugestedFriends: res.data
@@ -23452,7 +23450,7 @@
 	        friends: friends
 	      });
 	    }).then(function () {
-	      sugestFriends({ email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id }).then(function (res) {
+	      sugestFriends({ userFriends: newUserInfo.friends, id: newUserInfo._id }).then(function (res) {
 	        console.log(res);
 	        console.log('sasa');
 	        _this5.setState({
@@ -23471,7 +23469,7 @@
 	        friends: friends
 	      });
 	    }).then(function () {
-	      sugestFriends({ email: newUserInfo.email, userFriends: newUserInfo.friends, me: newUserInfo._id }).then(function (res) {
+	      sugestFriends({ userFriends: newUserInfo.friends, id: newUserInfo._id }).then(function (res) {
 	        console.log(res);
 	        console.log('sasa');
 	        _this6.setState({
@@ -23981,7 +23979,6 @@
 
 	var sugestFriends = function sugestFriends(me) {
 	  return axios.post('/api/sugestedFriends', {
-	    email: me.email,
 	    friends: me.userFriends,
 	    me: me.id
 	  });

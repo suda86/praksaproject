@@ -45,8 +45,6 @@ var Main = React.createClass({
         age: res.data.age,
         gender: res.data.gender,
         userFriends: res.data.userFriends,
-        friendRequest: res.data.friendRequest,
-        sentRequest: res.data.sentRequest,
         page: res.data.page
       });
     });
