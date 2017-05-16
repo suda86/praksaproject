@@ -34,21 +34,29 @@ var Registracija = React.createClass({
   },
   render: function() {
     return (
-      <div>
-        <form onSubmit={this.onRegisterFormSubmit}>
-          <input type="text" ref="firstName" required/><br/>
-          <input type="text" ref="lastName"/><br/>
-          <input type="email" ref="email" required></input><br/>
-          <input type="password" ref="password" required></input><br/>
-          <input type="number" ref="age" ></input><br/>
-          <input type="radio" value="male" checked={this.state.gender === 'male'} onChange={this.handleGenderChange}/> Male
-          <input type="radio" value="female" checked={this.state.gender === 'female'} onChange={this.handleGenderChange}/> Female<br/>
-          <button>register</button>
-        </form>
-        <h3>If you olredy have account go to login page</h3><br/>
-        <button onClick={this.goToLoginPage}>Go to login page</button>
+      <div className="container">
+
+        <div className="col-md-4 col-xs-12 col-md-offset-4">
+          <h1 className="welcome">WELCOME</h1>
+          <div className="register-form">
+            <form onSubmit={this.onRegisterFormSubmit}>
+              <input className="form-control" type="text" ref="firstName" placeholder="First Name" required/><br/>
+              <input className="form-control" type="text" ref="lastName" placeholder="Last Name" /><br/>
+              <input className="form-control" type="email" ref="email" placeholder="email address" required></input><br/>
+              <input className="form-control" type="password" ref="password" placeholder="password" required></input><br/>
+              <input className="form-control" type="number" ref="age" placeholder="how old are you" ></input><br/>
+              <div className="register-radio">
+                <label className="radio-inline"><input type="radio" value="male" checked={this.state.gender === 'male'} onChange={this.handleGenderChange}/> Male</label>
+                <label className="radio-inline"><input type="radio" value="female" checked={this.state.gender === 'female'} onChange={this.handleGenderChange}/> Female</label><br/>
+              </div>
+              <button className="btn btn-primary btn-block register-button">Send</button>
+            </form>
+          </div>
+          <h3 className="register-login-button">If you olredy have account go to login page</h3><br/>
+          <button className="btn btn-info btn-block" onClick={this.goToLoginPage}>Go to login page</button>
+        </div>
       </div>
-    )
+    );
   }
 });
 

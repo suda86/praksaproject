@@ -35,7 +35,10 @@ var Profile = React.createClass({
       });
     });
   },
-  handleSeeFriendFriends: function(friendFriends, myFriends) {
+  handleSeeFriendFriends: function(friendFriends) {
+    var myFriends = this.state.friends.map((friend) => {
+      return friend._id;
+    });
     friendFriends = friendFriends.filter((friend) => {
       return myFriends.indexOf(friend._id) === -1 && friend._id !== this.props.info.id;
     });
@@ -62,8 +65,6 @@ var Profile = React.createClass({
       }).then(() => {
         sugestFriends({userFriends: newUserInfo.friends, id: newUserInfo._id})
         .then((res) => {
-          console.log(newUserInfo._id);
-          console.log('sasa');
           this.setState({
             sugestedFriends: res.data
           });
@@ -77,8 +78,6 @@ var Profile = React.createClass({
     newUserInfo.id = newUserInfo._id;
     newUserInfo.userFriends = newUserInfo.friends;
     localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
-    console.log(newUserInfo);
-    console.log(localStorage.getItem('projekatPraksa'));
     allUserInfoFromId(newUserInfo.friends)
       .then((friends) => {
         this.setState({
@@ -87,8 +86,6 @@ var Profile = React.createClass({
       }).then(() => {
         sugestFriends({userFriends: newUserInfo.friends, id: newUserInfo._id})
         .then((res) => {
-          console.log(res);
-          console.log('sasa');
           this.setState({
             sugestedFriends: res.data
           });
@@ -110,8 +107,6 @@ var Profile = React.createClass({
       }).then(() => {
         sugestFriends({userFriends: newUserInfo.friends, id: newUserInfo._id})
         .then((res) => {
-          console.log(res);
-          console.log('sasa');
           this.setState({
             sugestedFriends: res.data
           });
@@ -145,6 +140,7 @@ var Profile = React.createClass({
     };
     return (
       <div>
+        <h5>{this.props.info.message}</h5>
         <button onClick={this.onLogoutClick}>logout</button>
         <PersonalInfo info={this.props.info}/>
         {renderPopup()}

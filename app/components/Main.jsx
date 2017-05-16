@@ -10,7 +10,6 @@ var Main = React.createClass({
   getInitialState: function() {
     if(localStorage.getItem('projekatPraksa')) {
       var state = JSON.parse(localStorage.getItem('projekatPraksa'));
-      console.log(state);
       return {
         id: state.id,
         firstName: state.firstName,
@@ -61,7 +60,8 @@ var Main = React.createClass({
         age: res.data.age,
         gender: res.data.gender,
         userFriends: res.data.userFriends,
-        page: res.data.page
+        page: res.data.page,
+        message: res.data.message
       });
     });
   },
@@ -73,7 +73,8 @@ var Main = React.createClass({
   handleLogout: function() {
     localStorage.removeItem('projekatPraksa');
     this.setState({
-      page: 'login'
+      page: 'login',
+      message: ''
     });
   },
   rendering: function () {
@@ -83,7 +84,7 @@ var Main = React.createClass({
       );
     } else if (this.state.page === 'login') {
       return (
-        <Login goToRegisterPage={this.handleGoToRegister} onLogin={this.handleLogin}/>
+        <Login goToRegisterPage={this.handleGoToRegister} onLogin={this.handleLogin} message={this.state.message}/>
       );
     } else if(this.state.page === 'profile') {
       return (

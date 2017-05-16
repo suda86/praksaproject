@@ -3,7 +3,6 @@ const axios = require('axios');
 
 var PopupFriend = React.createClass({
   seeFriends: function() {
-    // console.log(this.props.friends);
     var myFriends = this.props.myFriends;
     var friendsIds = this.props.friends;
     var friendsComplete = friendsIds.map((friendId) => {
@@ -14,13 +13,12 @@ var PopupFriend = React.createClass({
       });
     });
     return Promise.all(friendsComplete).then((friends) => {
-      this.props.onSeeFriendsClick(friends, myFriends);
+      this.props.onSeeFriendsClick(friends);
     });
   },
   addFriend: function() {
     var userId = this.props._id;
     var myId = this.props.me.id;
-    console.log(userId, myId);
     axios.post('/api/addFriend', {
       me: myId,
       friend: userId

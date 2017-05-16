@@ -18,7 +18,6 @@ app.post('/api/register', (req, res) => {
   var body = req.body;
   var user = new User(body);
   user.save().then((user) => {
-    console.log(user);
     res.send('login');
   }).catch((e) => {
     console.log(e);
@@ -40,11 +39,13 @@ app.post('/api/login', (req, res) => {
         gender: user.gender,
         userFriends: user.friends,
         page: 'profile',
+        message: `Hello ${user.firstName}, welcome to your profile`
       });
     }
     else {
       res.send({
-        page: 'login'
+        page: 'login',
+        message: `wrong email or password. Please try again`
       });
     }
   }).catch((e) => {
@@ -64,7 +65,6 @@ app.get('/api/getuser/:id', (req, res) => {
 app.post('/api/sugestedFriends', (req, res) => {
   var userId = req.body.me;
   var userFriendsId = req.body.friends;
-  console.log(userFriendsId);
   var allFriendsFriends = getAllFriendsNames(userFriendsId);
   return Promise.all(allFriendsFriends).then((allFriends) => {
     var sugestedFriendsIds = sugestFriends(allFriends, userId, userFriendsId);
@@ -82,11 +82,9 @@ app.post('/api/removeFriend', (req, res) => {
   User.findOneAndUpdate({'_id': myId}, {$pull:{friends: deleteFriendId}}, {new: true})
     .then((data) => {
       res.send(data);
-      console.log('uspesna prva');
     });
   User.findOneAndUpdate({'_id': deleteFriendId}, {$pull:{friends: myId}}, {new: true})
     .then((data) => {
-      console.log('uspesna druga');
     }).catch((e) => {
       console.log(e);
     });
@@ -98,13 +96,11 @@ app.post('/api/addFriend', (req, res) => {
   User.findOneAndUpdate({'_id': myId}, {$addToSet:{friends: friendId}}, {new: true})
     .then((data) => {
       res.send(data);
-      console.log('dodata prva');
     }).catch((e) => {
       console.log(e);
     });
   User.findOneAndUpdate({'_id': friendId}, {$addToSet:{friends: myId}}, {new: true})
     .then((data) => {
-      console.log('dodata druga');
     }).catch((e) => {
       console.log(e);
     });

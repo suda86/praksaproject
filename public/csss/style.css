@@ -1,56 +1,28 @@
 body {
-  background-color: #A9A9A9;
+  background-color: yellow;
+}
+
+form {
+  text-align: center;
+  margin-top: 15%;
+}
+form input {
+  position: relative;
+  border: 2px solid #ccc;
+  border-radius: 4px;
 }
 
 .register-button {
-  margin-top: 1em;
+  background-color: #2CBBBB;
+  border: 1px solid #27A0A0;
+  display: inline-block;
+  cursor: pointer;
+  color: #FFFFFF;
+  font-size: 1em;
+  padding: 0.3em 0.5em;
+  text-decoration: none;
+  text-transform: uppercase;
 }
-
-.register-form {
-  margin-top: 1em;
-}
-
-.register-radio {
-  text-align: center;
-}
-
-.welcome {
-  text-align: center;
-  font-family: fantasy;
-  color: #2F4F4F;
-}
-
-.register-login-button {
-  text-align: center;
-  margin-top: 3em;
-  font-family: fantasy;
-  color: #2F4F4F;
-}
-
-.login-form {
-  margin-top: 50%;
-}
-
-.login-h1 {
-  text-align: center;
-  color: #2F4F4F;
-}
-
-.login-h3{
-  text-align: center;
-  color: #2F4F4F;
-  margin-bottom: 2em;
-}
-
-.login-error-message {
-  text-align: center;
-  color: #B22222;
-  margin-top: 10em;
-}
-
-
-
-
 
 .personal-info {
   text-align: center;
@@ -97,4 +69,8 @@ body {
 .close-popup-button {
   text-align: center;
   width: 50%;
+}
+
+button {
+  margin: 5px;
 }

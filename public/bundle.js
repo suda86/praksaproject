@@ -19770,7 +19770,6 @@
 	  getInitialState: function getInitialState() {
 	    if (localStorage.getItem('projekatPraksa')) {
 	      var state = JSON.parse(localStorage.getItem('projekatPraksa'));
-	      console.log(state);
 	      return {
 	        id: state.id,
 	        firstName: state.firstName,
@@ -19825,7 +19824,8 @@
 	        age: res.data.age,
 	        gender: res.data.gender,
 	        userFriends: res.data.userFriends,
-	        page: res.data.page
+	        page: res.data.page,
+	        message: res.data.message
 	      });
 	    });
 	  },
@@ -19837,14 +19837,15 @@
 	  handleLogout: function handleLogout() {
 	    localStorage.removeItem('projekatPraksa');
 	    this.setState({
-	      page: 'login'
+	      page: 'login',
+	      message: ''
 	    });
 	  },
 	  rendering: function rendering() {
 	    if (this.state.page === 'register') {
 	      return React.createElement(Registracija, { onRegistration: this.handleRegistration, onLoginButtonClick: this.handleLoginButtonClick });
 	    } else if (this.state.page === 'login') {
-	      return React.createElement(Login, { goToRegisterPage: this.handleGoToRegister, onLogin: this.handleLogin });
+	      return React.createElement(Login, { goToRegisterPage: this.handleGoToRegister, onLogin: this.handleLogin, message: this.state.message });
 	    } else if (this.state.page === 'profile') {
 	      return React.createElement(
 	        'div',
@@ -23434,9 +23435,12 @@
 	      });
 	    });
 	  },
-	  handleSeeFriendFriends: function handleSeeFriendFriends(friendFriends, myFriends) {
+	  handleSeeFriendFriends: function handleSeeFriendFriends(friendFriends) {
 	    var _this3 = this;
 
+	    var myFriends = this.state.friends.map(function (friend) {
+	      return friend._id;
+	    });
 	    friendFriends = friendFriends.filter(function (friend) {
 	      return myFriends.indexOf(friend._id) === -1 && friend._id !== _this3.props.info.id;
 	    });
@@ -23463,8 +23467,6 @@
 	      });
 	    }).then(function () {
 	      sugestFriends({ userFriends: newUserInfo.friends, id: newUserInfo._id }).then(function (res) {
-	        console.log(newUserInfo._id);
-	        console.log('sasa');
 	        _this4.setState({
 	          sugestedFriends: res.data
 	        });
@@ -23480,16 +23482,12 @@
 	    newUserInfo.id = newUserInfo._id;
 	    newUserInfo.userFriends = newUserInfo.friends;
 	    localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
-	    console.log(newUserInfo);
-	    console.log(localStorage.getItem('projekatPraksa'));
 	    allUserInfoFromId(newUserInfo.friends).then(function (friends) {
 	      _this5.setState({
 	        friends: friends
 	      });
 	    }).then(function () {
 	      sugestFriends({ userFriends: newUserInfo.friends, id: newUserInfo._id }).then(function (res) {
-	        console.log(res);
-	        console.log('sasa');
 	        _this5.setState({
 	          sugestedFriends: res.data
 	        });
@@ -23511,8 +23509,6 @@
 	      });
 	    }).then(function () {
 	      sugestFriends({ userFriends: newUserInfo.friends, id: newUserInfo._id }).then(function (res) {
-	        console.log(res);
-	        console.log('sasa');
 	        _this6.setState({
 	          sugestedFriends: res.data
 	        });
@@ -23543,6 +23539,11 @@
 	    return React.createElement(
 	      'div',
 	      null,
+	      React.createElement(
+	        'h5',
+	        null,
+	        this.props.info.message
+	      ),
 	      React.createElement(
 	        'button',
 	        { onClick: this.onLogoutClick },
@@ -23679,7 +23680,6 @@
 	  seeFriends: function seeFriends() {
 	    var _this2 = this;
 
-	    // console.log(this.props.friends);
 	    var myFriends = this.props.me.userFriends;
 	    var friendsIds = this.props.friends;
 	    var friendsComplete = friendsIds.map(function (friendId) {
@@ -23690,7 +23690,7 @@
 	      });
 	    });
 	    return Promise.all(friendsComplete).then(function (friends) {
-	      _this2.props.onSeeFriendsClick(friends, myFriends);
+	      _this2.props.onSeeFriendsClick(friends);
 	    });
 	  },
 	  render: function render() {
@@ -23799,7 +23799,6 @@
 	  seeFriends: function seeFriends() {
 	    var _this = this;
 
-	    // console.log(this.props.friends);
 	    var myFriends = this.props.myFriends;
 
 	    var friendsIds = this.props.friends;
@@ -23811,7 +23810,7 @@
 	      });
 	    });
 	    return Promise.all(friendsComplete).then(function (friends) {
-	      _this.props.onSeeFriendsClick(friends, myFriends);
+	      _this.props.onSeeFriendsClick(friends);
 	    });
 	  },
 	  onAddFriendClick: function onAddFriendClick() {
@@ -23939,7 +23938,6 @@
 	  seeFriends: function seeFriends() {
 	    var _this = this;
 
-	    // console.log(this.props.friends);
 	    var myFriends = this.props.myFriends;
 	    var friendsIds = this.props.friends;
 	    var friendsComplete = friendsIds.map(function (friendId) {
@@ -23950,7 +23948,7 @@
 	      });
 	    });
 	    return Promise.all(friendsComplete).then(function (friends) {
-	      _this.props.onSeeFriendsClick(friends, myFriends);
+	      _this.props.onSeeFriendsClick(friends);
 	    });
 	  },
 	  addFriend: function addFriend() {
@@ -23958,7 +23956,6 @@
 
 	    var userId = this.props._id;
 	    var myId = this.props.me.id;
-	    console.log(userId, myId);
 	    axios.post('/api/addFriend', {
 	      me: myId,
 	      friend: userId
@@ -24102,41 +24099,66 @@
 	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'container' },
 	      React.createElement(
-	        'form',
-	        { onSubmit: this.onRegisterFormSubmit },
-	        React.createElement('input', { type: 'text', ref: 'firstName', required: true }),
-	        React.createElement('br', null),
-	        React.createElement('input', { type: 'text', ref: 'lastName' }),
-	        React.createElement('br', null),
-	        React.createElement('input', { type: 'email', ref: 'email', required: true }),
-	        React.createElement('br', null),
-	        React.createElement('input', { type: 'password', ref: 'password', required: true }),
-	        React.createElement('br', null),
-	        React.createElement('input', { type: 'number', ref: 'age' }),
-	        React.createElement('br', null),
-	        React.createElement('input', { type: 'radio', value: 'male', checked: this.state.gender === 'male', onChange: this.handleGenderChange }),
-	        ' Male',
-	        React.createElement('input', { type: 'radio', value: 'female', checked: this.state.gender === 'female', onChange: this.handleGenderChange }),
-	        ' Female',
+	        'div',
+	        { className: 'col-md-4 col-xs-12 col-md-offset-4' },
+	        React.createElement(
+	          'h1',
+	          { className: 'welcome' },
+	          'WELCOME'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'register-form' },
+	          React.createElement(
+	            'form',
+	            { onSubmit: this.onRegisterFormSubmit },
+	            React.createElement('input', { className: 'form-control', type: 'text', ref: 'firstName', placeholder: 'First Name', required: true }),
+	            React.createElement('br', null),
+	            React.createElement('input', { className: 'form-control', type: 'text', ref: 'lastName', placeholder: 'Last Name' }),
+	            React.createElement('br', null),
+	            React.createElement('input', { className: 'form-control', type: 'email', ref: 'email', placeholder: 'email address', required: true }),
+	            React.createElement('br', null),
+	            React.createElement('input', { className: 'form-control', type: 'password', ref: 'password', placeholder: 'password', required: true }),
+	            React.createElement('br', null),
+	            React.createElement('input', { className: 'form-control', type: 'number', ref: 'age', placeholder: 'how old are you' }),
+	            React.createElement('br', null),
+	            React.createElement(
+	              'div',
+	              { className: 'register-radio' },
+	              React.createElement(
+	                'label',
+	                { className: 'radio-inline' },
+	                React.createElement('input', { type: 'radio', value: 'male', checked: this.state.gender === 'male', onChange: this.handleGenderChange }),
+	                ' Male'
+	              ),
+	              React.createElement(
+	                'label',
+	                { className: 'radio-inline' },
+	                React.createElement('input', { type: 'radio', value: 'female', checked: this.state.gender === 'female', onChange: this.handleGenderChange }),
+	                ' Female'
+	              ),
+	              React.createElement('br', null)
+	            ),
+	            React.createElement(
+	              'button',
+	              { className: 'btn btn-primary btn-block register-button' },
+	              'Send'
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'h3',
+	          { className: 'register-login-button' },
+	          'If you olredy have account go to login page'
+	        ),
 	        React.createElement('br', null),
 	        React.createElement(
 	          'button',
-	          null,
-	          'register'
+	          { className: 'btn btn-info btn-block', onClick: this.goToLoginPage },
+	          'Go to login page'
 	        )
-	      ),
-	      React.createElement(
-	        'h3',
-	        null,
-	        'If you olredy have account go to login page'
-	      ),
-	      React.createElement('br', null),
-	      React.createElement(
-	        'button',
-	        { onClick: this.goToLoginPage },
-	        'Go to login page'
 	      )
 	    );
 	  }
@@ -24169,29 +24191,47 @@
 	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'container' },
 	      React.createElement(
-	        'form',
-	        { onSubmit: this.onLoginFormSubmit },
-	        React.createElement('input', { type: 'text', ref: 'email', required: true }),
-	        React.createElement('br', null),
-	        React.createElement('input', { type: 'password', ref: 'password', required: true }),
-	        ' ',
-	        React.createElement('br', null),
+	        'div',
+	        { className: 'col-md-4 col-xs-12 col-md-offset-4' },
 	        React.createElement(
-	          'button',
-	          null,
-	          'Login'
+	          'h1',
+	          { className: 'login-h1' },
+	          'LOGIN:'
 	        ),
 	        React.createElement(
-	          'h4',
-	          null,
+	          'div',
+	          { className: 'login-form' },
+	          React.createElement(
+	            'form',
+	            { onSubmit: this.onLoginFormSubmit },
+	            React.createElement('input', { className: 'form-control', type: 'text', ref: 'email', placeholder: 'email address', required: true }),
+	            React.createElement('br', null),
+	            React.createElement('input', { className: 'form-control', type: 'password', ref: 'password', placeholder: 'password', required: true }),
+	            ' ',
+	            React.createElement('br', null),
+	            React.createElement(
+	              'button',
+	              { className: 'btn btn-primary btn-block' },
+	              'Login'
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'p',
+	          { className: 'login-error-message' },
+	          this.props.message
+	        ),
+	        React.createElement(
+	          'h3',
+	          { className: 'login-h3' },
 	          'If you dont have account go to register page and make one'
 	        ),
 	        React.createElement(
 	          'button',
-	          { onClick: this.onGoToRegisterClick },
-	          'go to register page'
+	          { className: 'btn btn-info btn-block', onClick: this.onGoToRegisterClick },
+	          'Go to register page'
 	        )
 	      )
 	    );
