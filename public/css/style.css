@@ -48,53 +48,132 @@ body {
   margin-top: 10em;
 }
 
+.info-friends-div {
+  max-height: 450px;
+}
 
 
+
+.friends-list-div {
+  height: 450px;
+  border-radius: 10px;
+  overflow-y: scroll;
+  padding: 0px;
+  background-color: #D3F1F5;
+  text-align: center;
+}
 
 
 .personal-info {
   text-align: center;
-  background-color: blue;
+  height: 450px;
+  background-color: #D3D9DB;
   border-radius: 5%;
 }
 
-.friends-list {
-  text-align: center;
-  border-radius: 5%;
-  background-color: grey;
+.friend-buttons {
+  margin: 5px;
+}
+
+.sugested-friends-div {
+  padding-left: 0px;
+  padding-left: 0px;
+  border-radius: 10px;
+  background-color: #CEEAED;
+  margin: 0;
+}
+
+.personal-info-div {
+  margin-top: 20%;
+  font-family: fantasy;
+}
+
+.friends-text {
+  font-family: fantasy;
+  color: #2F4F4F;
+}
+
+.personal-text {
+  font-family: fantasy;
+  color: #2F4F4F;
+  font-size: 2em;
+}
+
+.personal-h1 {
+  font-family: fantasy;
+  color: #2F4F4F;
+  font-size: 4em;
+}
+
+.my-friends-h3 {
+  font-family: fantasy;
+  color: #2F4F4F;
 }
 
 .friend {
+  padding: 0;
   text-align: center;
-  background-color: green;
-  border: 1px solid black;
-  border-radius: 5%;
+  background-color: #A2B5B8;
+  border-radius: 5px;
 }
 
-.sugested-friends-list {
+.friend-sugest {
+  border: 1px solid #A0A3A3;
+  padding: 0;
+  text-align:center;
+  background-color: #A2B5B8;
+  border-radius: 5px;
+}
+
+.sugest-h3 {
+  color: #2F4F4F;
+  font-family: fantasy;
   text-align: center;
-  border-radius: 5%;
-  background-color: purple;
+  padding: 5px;
 }
 
 .friends-friends-list {
   text-align: center;
-  background-color: red;
-  border-radius: 5%;
+  background-color: #A2B5B8;
+  border-radius: 5px;
+}
+
+.message-p {
+  color: #2F4F4F;
+  text-align: center;
+  font-size: 2em;
+  font-family: fantasy;
+}
+
+.loguot-button {
+margin-bottom: 20px;
+margin-left: 80%;
 }
 
 .popup-list {
+  z-index: 100;
   position: fixed;
+  margin-top: 15%;
   margin-left: 35%;
-  background-color: blue;
+  background-color: #636666;
   width: 30%;
   height: 350px;
   overflow-y: scroll;
-  border: 3px solid orange;
-  border-radius: 7px;
+  border: 5px solid #444E4F;
+  border-radius: 15px;
 }
 
-.close-popup-button {
+.footer {
   text-align: center;
-  width: 50%;
+  margin-top: 10px;
+  background-color: #32686E;
+  border-radius: 10px;
+  padding: 0;
+}
+
+.footer-p {
+  margin-top: 10px;
+  font-family: fantasy;
+  color: #D9F7FA;
+  font-weight: bold;
 }

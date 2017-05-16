@@ -14,8 +14,8 @@ var SugestedFriendsList = React.createClass({
       });
     }
     return (
-      <div className="sugested-friends-list">
-        <p>Sugested friends list</p>
+      <div className="row sugested-friends-div">
+        <h3 className="sugest-h3">Users you maybe know</h3>
         {renderFriends()}
       </div>
     );

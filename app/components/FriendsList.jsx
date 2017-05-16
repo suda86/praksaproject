@@ -15,7 +15,7 @@ var FriendsList = React.createClass({
     }
     return (
       <div className="friends-list">
-        <p>friends list component</p>
+        <h3 className="my-friends-h3">My Friends</h3>
         {renderFriends()}
       </div>
     );

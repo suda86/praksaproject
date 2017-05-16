@@ -31,13 +31,12 @@ var Friend = React.createClass({
   render: function() {
     return (
       <div className="friend">
-        <p>First Name: {this.props.firstName}</p>
-        <p>last Name: {this.props.lastName}</p>
-        <p>Age: {this.props.age}</p>
-        <p>Gender: {this.props.gender}</p>
-        <p>Email address: {this.props.email}</p>
-        <button onClick={this.onRemoveFriendClick} >Remove from friend list</button>
-        <button onClick={this.seeFriends} >see friends</button>
+        <h4 className="friends-text">{this.props.firstName} {this.props.lastName}</h4>
+        <p className="friends-text">Age: {this.props.age}</p>
+        <p className="friends-text">Gender: {this.props.gender}</p>
+        <p className="friends-text">Email address: {this.props.email}</p>
+        <button className="btn btn-danger friend-buttons" onClick={this.onRemoveFriendClick} >Remove from friens</button>
+        <button className="btn btn-info friend-buttons" onClick={this.seeFriends} >see friends</button>
       </div>
     );
   }

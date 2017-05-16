@@ -3,12 +3,11 @@ const React = require('react');
 var PersonalInfo = React.createClass({
   render: function() {
     return (
-      <div className="personal-info">
-        <h1>{this.props.info.firstName} {this.props.info.lastName}</h1>
-        <h3>About</h3>
-        <p>Genge: {this.props.info.gender}</p>
-        <p>Age: {this.props.info.age}</p>
-        <p>Email address: {this.props.info.email}</p>
+      <div className="personal-info-div">
+        <h1 className="personal-h1">{this.props.info.firstName} {this.props.info.lastName}</h1>
+        <p className="personal-text">Genge: {this.props.info.gender}</p>
+        <p className="personal-text">Age: {this.props.info.age}</p>
+        <p className="personal-text">Email address: {this.props.info.email}</p>
       </div>
     );
   }

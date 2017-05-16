@@ -23539,20 +23539,61 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(
-	        'h5',
-	        null,
-	        this.props.info.message
-	      ),
-	      React.createElement(
-	        'button',
-	        { onClick: this.onLogoutClick },
-	        'logout'
-	      ),
-	      React.createElement(PersonalInfo, { info: this.props.info }),
 	      renderPopup(),
-	      React.createElement(FriendsList, { me: this.props.info, friends: this.state.friends, onRemoveFriend: this.handleRemoveFriend, seeFriendFriends: this.handleSeeFriendFriends }),
-	      React.createElement(SugestedFriendsList, { me: this.props.info, onAddFriend: this.handleAddFriendClick, myFriends: this.props.info.userFriends, friends: this.state.sugestedFriends, seeFriendFriends: this.handleSeeFriendFriends })
+	      React.createElement(
+	        'div',
+	        { className: 'container' },
+	        React.createElement(
+	          'div',
+	          { className: 'row info-friends-div' },
+	          React.createElement(
+	            'div',
+	            { className: 'col-sm-12' },
+	            React.createElement(
+	              'p',
+	              { className: 'message-p' },
+	              this.props.info.message
+	            ),
+	            React.createElement(
+	              'button',
+	              { className: 'btn btn-primary loguot-button', onClick: this.onLogoutClick },
+	              'logout'
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-sm-8 personal-info' },
+	            React.createElement(PersonalInfo, { info: this.props.info })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-sm-4 friends-list-div' },
+	            React.createElement(FriendsList, { me: this.props.info, friends: this.state.friends, onRemoveFriend: this.handleRemoveFriend, seeFriendFriends: this.handleSeeFriendFriends })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-sm-12 sugested-friends-div' },
+	            React.createElement(
+	              'div',
+	              { className: 'container' },
+	              React.createElement(SugestedFriendsList, { me: this.props.info, onAddFriend: this.handleAddFriendClick, myFriends: this.props.info.userFriends, friends: this.state.sugestedFriends, seeFriendFriends: this.handleSeeFriendFriends })
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'comtainer' },
+	            React.createElement(
+	              'div',
+	              { className: 'col-sm-12 footer' },
+	              React.createElement(
+	                'p',
+	                { className: 'footer-p' },
+	                'Created by Sasa'
+	              )
+	            )
+	          )
+	        )
+	      )
 	    );
 	  }
 	});
@@ -23573,34 +23614,29 @@
 	  render: function render() {
 	    return React.createElement(
 	      "div",
-	      { className: "personal-info" },
+	      { className: "personal-info-div" },
 	      React.createElement(
 	        "h1",
-	        null,
+	        { className: "personal-h1" },
 	        this.props.info.firstName,
 	        " ",
 	        this.props.info.lastName
 	      ),
 	      React.createElement(
-	        "h3",
-	        null,
-	        "About"
-	      ),
-	      React.createElement(
 	        "p",
-	        null,
+	        { className: "personal-text" },
 	        "Genge: ",
 	        this.props.info.gender
 	      ),
 	      React.createElement(
 	        "p",
-	        null,
+	        { className: "personal-text" },
 	        "Age: ",
 	        this.props.info.age
 	      ),
 	      React.createElement(
 	        "p",
-	        null,
+	        { className: "personal-text" },
 	        "Email address: ",
 	        this.props.info.email
 	      )
@@ -23640,9 +23676,9 @@
 	      'div',
 	      { className: 'friends-list' },
 	      React.createElement(
-	        'p',
-	        null,
-	        'friends list component'
+	        'h3',
+	        { className: 'my-friends-h3' },
+	        'My Friends'
 	      ),
 	      renderFriends()
 	    );
@@ -23698,43 +23734,38 @@
 	      'div',
 	      { className: 'friend' },
 	      React.createElement(
-	        'p',
-	        null,
-	        'First Name: ',
-	        this.props.firstName
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        'last Name: ',
+	        'h4',
+	        { className: 'friends-text' },
+	        this.props.firstName,
+	        ' ',
 	        this.props.lastName
 	      ),
 	      React.createElement(
 	        'p',
-	        null,
+	        { className: 'friends-text' },
 	        'Age: ',
 	        this.props.age
 	      ),
 	      React.createElement(
 	        'p',
-	        null,
+	        { className: 'friends-text' },
 	        'Gender: ',
 	        this.props.gender
 	      ),
 	      React.createElement(
 	        'p',
-	        null,
+	        { className: 'friends-text' },
 	        'Email address: ',
 	        this.props.email
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.onRemoveFriendClick },
-	        'Remove from friend list'
+	        { className: 'btn btn-danger friend-buttons', onClick: this.onRemoveFriendClick },
+	        'Remove from friens'
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.seeFriends },
+	        { className: 'btn btn-info friend-buttons', onClick: this.seeFriends },
 	        'see friends'
 	      )
 	    );
@@ -23771,11 +23802,11 @@
 	    };
 	    return React.createElement(
 	      'div',
-	      { className: 'sugested-friends-list' },
+	      { className: 'row sugested-friends-div' },
 	      React.createElement(
-	        'p',
-	        null,
-	        'Sugested friends list'
+	        'h3',
+	        { className: 'sugest-h3' },
+	        'Users you maybe know'
 	      ),
 	      renderFriends()
 	    );
@@ -23830,45 +23861,40 @@
 	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      { className: 'friend' },
+	      { className: 'col-sm-4 friend-sugest' },
 	      React.createElement(
-	        'p',
-	        null,
-	        'First Name: ',
-	        this.props.firstName
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        'last Name: ',
+	        'h4',
+	        { className: 'friends-text' },
+	        this.props.firstName,
+	        ' ',
 	        this.props.lastName
 	      ),
 	      React.createElement(
 	        'p',
-	        null,
+	        { className: 'friends-text' },
 	        'Age: ',
 	        this.props.age
 	      ),
 	      React.createElement(
 	        'p',
-	        null,
+	        { className: 'friends-text' },
 	        'Gender: ',
 	        this.props.gender
 	      ),
 	      React.createElement(
 	        'p',
-	        null,
+	        { className: 'friends-text' },
 	        'Email address: ',
 	        this.props.email
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.onAddFriendClick },
+	        { className: 'btn btn-primary friend-buttons', onClick: this.onAddFriendClick },
 	        'add to friends'
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.seeFriends },
+	        { className: 'btn btn-info friend-buttons', onClick: this.seeFriends },
 	        'see friends'
 	      )
 	    );
@@ -23911,10 +23937,9 @@
 	      { className: 'popup-list' },
 	      renderFriends(),
 	      React.createElement('br', null),
-	      React.createElement('br', null),
 	      React.createElement(
 	        'button',
-	        { className: 'close-popup-button', onClick: this.onCloseClick },
+	        { className: 'btn btn-warning friend-buttons', onClick: this.onCloseClick },
 	        'Close'
 	      )
 	    );
@@ -23970,43 +23995,38 @@
 	      'div',
 	      { className: 'friends-friends-list' },
 	      React.createElement(
-	        'p',
-	        null,
-	        'First Name: ',
-	        this.props.firstName
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        'last Name: ',
+	        'h4',
+	        { className: 'friends-text' },
+	        this.props.firstName,
+	        ' ',
 	        this.props.lastName
 	      ),
 	      React.createElement(
 	        'p',
-	        null,
+	        { className: 'friends-text' },
 	        'Age: ',
 	        this.props.age
 	      ),
 	      React.createElement(
 	        'p',
-	        null,
+	        { className: 'friends-text' },
 	        'Gender: ',
 	        this.props.gender
 	      ),
 	      React.createElement(
 	        'p',
-	        null,
+	        { className: 'friends-text' },
 	        'Email address: ',
 	        this.props.email
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.addFriend },
+	        { className: 'btn btn-primary friend-buttons', onClick: this.addFriend },
 	        'add to friends'
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.seeFriends },
+	        { className: 'btn btn-info friend-buttons', onClick: this.seeFriends },
 	        'see friends'
 	      )
 	    );

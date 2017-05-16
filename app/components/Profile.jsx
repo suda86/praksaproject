@@ -140,12 +140,31 @@ var Profile = React.createClass({
     };
     return (
       <div>
-        <h5>{this.props.info.message}</h5>
-        <button onClick={this.onLogoutClick}>logout</button>
-        <PersonalInfo info={this.props.info}/>
         {renderPopup()}
-        <FriendsList me={this.props.info} friends={this.state.friends} onRemoveFriend={this.handleRemoveFriend} seeFriendFriends={this.handleSeeFriendFriends}/>
-        <SugestedFriendsList me={this.props.info} onAddFriend={this.handleAddFriendClick} myFriends={this.props.info.userFriends} friends={this.state.sugestedFriends} seeFriendFriends={this.handleSeeFriendFriends}/>
+        <div className="container">
+          <div className="row info-friends-div">
+            <div className="col-sm-12">
+              <p className="message-p">{this.props.info.message}</p>
+              <button className="btn btn-primary loguot-button" onClick={this.onLogoutClick}>logout</button>
+            </div>
+            <div className="col-sm-8 personal-info">
+              <PersonalInfo info={this.props.info}/>
+            </div>
+            <div className="col-sm-4 friends-list-div">
+              <FriendsList me={this.props.info} friends={this.state.friends} onRemoveFriend={this.handleRemoveFriend} seeFriendFriends={this.handleSeeFriendFriends}/>
+            </div>
+            <div className="col-sm-12 sugested-friends-div">
+              <div className="container">
+                <SugestedFriendsList me={this.props.info} onAddFriend={this.handleAddFriendClick} myFriends={this.props.info.userFriends} friends={this.state.sugestedFriends} seeFriendFriends={this.handleSeeFriendFriends}/>
+              </div>
+            </div>
+            <div className="comtainer">
+              <div className="col-sm-12 footer">
+                <p className="footer-p">Created by Sasa</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
