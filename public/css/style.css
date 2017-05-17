@@ -132,6 +132,14 @@ body {
   padding: 5px;
 }
 
+.search-list-h3 {
+  color: #B8860B;
+  font-family: fantasy;
+  text-align: center;
+  padding: 5px;
+  font-weight: bold;
+}
+
 .friends-friends-list {
   text-align: center;
   background-color: #A2B5B8;
@@ -145,10 +153,10 @@ body {
   font-family: fantasy;
 }
 
-.loguot-button {
+/*.loguot-button {
 margin-bottom: 20px;
 margin-left: 80%;
-}
+}*/
 
 .popup-list {
   z-index: 100;
@@ -169,6 +177,10 @@ margin-left: 80%;
   background-color: #32686E;
   border-radius: 10px;
   padding: 0;
+}
+
+.search-bar {
+  margin-top: 20px;
 }
 
 .footer-p {

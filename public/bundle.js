@@ -19761,8 +19761,8 @@
 
 	var Profile = __webpack_require__(189);
 
-	var Registracija = __webpack_require__(199);
-	var Login = __webpack_require__(200);
+	var Registracija = __webpack_require__(203);
+	var Login = __webpack_require__(204);
 
 	var Main = React.createClass({
 	  displayName: 'Main',
@@ -23401,9 +23401,12 @@
 	var FriendsList = __webpack_require__(191);
 	var SugestedFriendsList = __webpack_require__(193);
 	var PopupList = __webpack_require__(195);
+	var SearchBar = __webpack_require__(197);
+	var SearchList = __webpack_require__(198);
 
-	var sugestFriends = __webpack_require__(197);
-	var allUserInfoFromId = __webpack_require__(198);
+	var sugestFriends = __webpack_require__(200);
+	var allUserInfoFromId = __webpack_require__(201);
+	var searchUsers = __webpack_require__(202);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -23413,7 +23416,9 @@
 	      friends: [],
 	      sugestedFriends: [],
 	      friendsFriends: [],
-	      popup: false
+	      popup: false,
+	      search: false,
+	      searchUsers: []
 	    };
 	  },
 	  componentWillMount: function componentWillMount() {
@@ -23446,7 +23451,8 @@
 	    });
 	    this.setState({
 	      friendsFriends: friendFriends,
-	      popup: true
+	      popup: true,
+	      search: false
 	    });
 	  },
 	  handleClosePopup: function handleClosePopup() {
@@ -23463,7 +23469,8 @@
 	    localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
 	    allUserInfoFromId(newUserInfo.friends).then(function (friends) {
 	      _this4.setState({
-	        friends: friends
+	        friends: friends,
+	        search: false
 	      });
 	    }).then(function () {
 	      sugestFriends({ userFriends: newUserInfo.friends, id: newUserInfo._id }).then(function (res) {
@@ -23489,7 +23496,8 @@
 	    }).then(function () {
 	      sugestFriends({ userFriends: newUserInfo.friends, id: newUserInfo._id }).then(function (res) {
 	        _this5.setState({
-	          sugestedFriends: res.data
+	          sugestedFriends: res.data,
+	          search: false
 	        });
 	      });
 	    }).catch(function (e) {
@@ -23505,7 +23513,8 @@
 	    localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
 	    allUserInfoFromId(newUserInfo.friends).then(function (friends) {
 	      _this6.setState({
-	        friends: friends
+	        friends: friends,
+	        search: false
 	      });
 	    }).then(function () {
 	      sugestFriends({ userFriends: newUserInfo.friends, id: newUserInfo._id }).then(function (res) {
@@ -23526,12 +23535,69 @@
 	  onLogoutClick: function onLogoutClick() {
 	    this.props.onLogoutClick();
 	  },
-	  render: function render() {
+	  handleSearchUsers: function handleSearchUsers(searchText) {
 	    var _this7 = this;
 
+	    var myFriends = this.state.friends.map(function (friend) {
+	      return friend._id;
+	    });
+	    searchUsers(searchText, myFriends).then(function (res) {
+	      var users = res.data;
+	      users = users.filter(function (user) {
+	        return user._id !== _this7.props.info.id;
+	      });
+	      _this7.setState({
+	        searchUsers: users,
+	        popup: false,
+	        search: true
+	      });
+	    });
+	  },
+	  handleCloseSearchList: function handleCloseSearchList() {
+	    this.setState({
+	      search: false
+	    });
+	  },
+	  handleAddFriendFromSearch: function handleAddFriendFromSearch(newUserInfo, addedUserId) {
+	    var _this8 = this;
+
+	    newUserInfo.page = 'profile';
+	    newUserInfo.id = newUserInfo._id;
+	    newUserInfo.userFriends = newUserInfo.friends;
+	    localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
+	    allUserInfoFromId(newUserInfo.friends).then(function (friends) {
+	      _this8.setState({
+	        friends: friends
+	      });
+	    }).then(function () {
+	      sugestFriends({ userFriends: newUserInfo.friends, id: newUserInfo._id }).then(function (res) {
+	        _this8.setState({
+	          sugestedFriends: res.data
+	        });
+	      });
+	    }).catch(function (e) {
+	      console.log(e);
+	    });
+	    var newSearchUsers = this.state.searchUsers.filter(function (user) {
+	      return user._id !== addedUserId;
+	    });
+	    this.setState({
+	      searchUsers: newSearchUsers
+	    });
+	  },
+	  render: function render() {
+	    var _this9 = this;
+
 	    var renderPopup = function renderPopup() {
-	      if (_this7.state.popup) {
-	        return React.createElement(PopupList, { myFriends: _this7.props.info.userFriends, onAddFriendFromPopup: _this7.handleAddFriendClickFromPopup, me: _this7.props.info, friends: _this7.state.friendsFriends, seeFriendFriends: _this7.handleSeeFriendFriends, onClosePopup: _this7.handleClosePopup });
+	      if (_this9.state.popup) {
+	        return React.createElement(PopupList, { myFriends: _this9.props.info.userFriends, onAddFriendFromPopup: _this9.handleAddFriendClickFromPopup, me: _this9.props.info, friends: _this9.state.friendsFriends, seeFriendFriends: _this9.handleSeeFriendFriends, onClosePopup: _this9.handleClosePopup });
+	      } else {
+	        return React.createElement('div', null);
+	      }
+	    };
+	    var renderSearchList = function renderSearchList() {
+	      if (_this9.state.search) {
+	        return React.createElement(SearchList, { onCloseSearchList: _this9.handleCloseSearchList, onAddFriendFromSearch: _this9.handleAddFriendFromSearch, myId: _this9.props.info.id, users: _this9.state.searchUsers });
 	      } else {
 	        return React.createElement('div', null);
 	      }
@@ -23539,7 +23605,30 @@
 	    return React.createElement(
 	      'div',
 	      null,
+	      renderSearchList(),
 	      renderPopup(),
+	      React.createElement(
+	        'div',
+	        { className: 'container search-bar' },
+	        React.createElement(
+	          'div',
+	          { className: 'row' },
+	          React.createElement(
+	            'div',
+	            { className: 'col-sm-8' },
+	            React.createElement(SearchBar, { searchUsers: this.handleSearchUsers })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-sm-4' },
+	            React.createElement(
+	              'button',
+	              { className: 'btn btn-primary btn-block', onClick: this.onLogoutClick },
+	              'logout'
+	            )
+	          )
+	        )
+	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'container' },
@@ -23553,11 +23642,6 @@
 	              'p',
 	              { className: 'message-p' },
 	              this.props.info.message
-	            ),
-	            React.createElement(
-	              'button',
-	              { className: 'btn btn-primary loguot-button', onClick: this.onLogoutClick },
-	              'logout'
 	            )
 	          ),
 	          React.createElement(
@@ -24039,6 +24123,132 @@
 /* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	var React = __webpack_require__(1);
+
+	var SearchBar = React.createClass({
+	  displayName: "SearchBar",
+
+	  onSearch: function onSearch(e) {
+	    var searchText = e.target.value;
+	    if (searchText.length > 0) {
+	      this.props.searchUsers(searchText);
+	    }
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement("input", { className: "form-control", type: "text", ref: "searchName", placeholder: "search for users", onChange: this.onSearch })
+	    );
+	  }
+	});
+
+	module.exports = SearchBar;
+
+/***/ }),
+/* 198 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var React = __webpack_require__(1);
+
+	var SearchUser = __webpack_require__(199);
+
+	var SearchList = React.createClass({
+	  displayName: 'SearchList',
+
+	  onCloseClick: function onCloseClick() {
+	    this.props.onCloseSearchList();
+	  },
+	  render: function render() {
+	    var _this = this;
+
+	    var users = this.props.users;
+
+	    var renderUsers = function renderUsers() {
+	      return users.map(function (user) {
+	        return React.createElement(SearchUser, _extends({ key: user._id, myId: _this.props.myId, onAddFriendFromSearch: _this.props.onAddFriendFromSearch }, user));
+	      });
+	    };
+	    return React.createElement(
+	      'div',
+	      { className: 'popup-list' },
+	      React.createElement(
+	        'h3',
+	        { className: 'search-list-h3' },
+	        'Searching users...'
+	      ),
+	      renderUsers(),
+	      React.createElement('br', null),
+	      React.createElement(
+	        'button',
+	        { className: 'btn btn-warning friend-buttons', onClick: this.onCloseClick },
+	        'Close'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = SearchList;
+
+/***/ }),
+/* 199 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var axios = __webpack_require__(160);
+
+	var PopupFriend = React.createClass({
+	  displayName: 'PopupFriend',
+
+	  addFriend: function addFriend() {
+	    var _this = this;
+
+	    var userId = this.props._id;
+	    var myId = this.props.myId;
+	    console.log(userId, myId);
+	    axios.post('/api/addFriend', {
+	      me: myId,
+	      friend: userId
+	    }).then(function (res) {
+	      _this.props.onAddFriendFromSearch(res.data, userId);
+	    }).catch(function (e) {
+	      console.log(e);
+	    });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'friends-friends-list' },
+	      React.createElement(
+	        'h4',
+	        { className: 'friends-text' },
+	        this.props.firstName,
+	        ' ',
+	        this.props.lastName
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'btn btn-primary friend-buttons', onClick: this.addFriend },
+	        'add to friends'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = PopupFriend;
+
+/***/ }),
+/* 200 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	var axios = __webpack_require__(160);
@@ -24053,7 +24263,7 @@
 	module.exports = sugestFriends;
 
 /***/ }),
-/* 198 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24075,7 +24285,24 @@
 	module.exports = allUserInfoFromId;
 
 /***/ }),
-/* 199 */
+/* 202 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var axios = __webpack_require__(160);
+
+	var searchUsers = function searchUsers(searchText, friends) {
+	  return axios.post('/api/searchUsers', {
+	    searchText: searchText,
+	    friends: friends
+	  });
+	};
+
+	module.exports = searchUsers;
+
+/***/ }),
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24187,7 +24414,7 @@
 	module.exports = Registracija;
 
 /***/ }),
-/* 200 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';

@@ -106,6 +106,23 @@ app.post('/api/addFriend', (req, res) => {
     });
 });
 
+app.post('/api/searchUsers', (req, res) => {
+  var searchText = new RegExp(req.body.searchText,'i');
+  var myFriends = req.body.friends;
+  User.find({
+    $or: [
+      {'firstName': searchText},
+      {'lastName': searchText}
+    ]
+  }).then((users) => {
+    var findUsers = users.filter((user) => {
+      var id = user._id + '';
+      return myFriends.indexOf(id) < 0;
+    });
+    res.send(findUsers);
+  });
+});
+
 app.listen(PORT, function () {
   console.log(`Express server is up on ${PORT}`);
 });

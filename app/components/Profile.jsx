@@ -5,9 +5,12 @@ const PersonalInfo = require('./PersonalInfo');
 const FriendsList = require('./FriendsList');
 const SugestedFriendsList = require('./SugestedFriendsList');
 const PopupList = require('./PopupList');
+const SearchBar = require('./SearchBar');
+const SearchList = require('./SearchList');
 
 const sugestFriends = require('../cliFunctions/sugestFriends');
 const allUserInfoFromId = require('../cliFunctions/allUserInfoFromId');
+const searchUsers = require('../cliFunctions/searchUsers');
 
 var Profile = React.createClass({
   getInitialState: function() {
@@ -15,7 +18,9 @@ var Profile = React.createClass({
       friends: [],
       sugestedFriends: [],
       friendsFriends: [],
-      popup: false
+      popup: false,
+      search: false,
+      searchUsers: []
     }
   },
   componentWillMount: function() {
@@ -44,7 +49,8 @@ var Profile = React.createClass({
     });
     this.setState({
       friendsFriends: friendFriends,
-      popup: true
+      popup: true,
+      search: false
     });
   },
   handleClosePopup: function() {
@@ -60,7 +66,8 @@ var Profile = React.createClass({
     allUserInfoFromId(newUserInfo.friends)
       .then((friends) => {
         this.setState({
-          friends: friends
+          friends: friends,
+          search: false
         });
       }).then(() => {
         sugestFriends({userFriends: newUserInfo.friends, id: newUserInfo._id})
@@ -87,7 +94,8 @@ var Profile = React.createClass({
         sugestFriends({userFriends: newUserInfo.friends, id: newUserInfo._id})
         .then((res) => {
           this.setState({
-            sugestedFriends: res.data
+            sugestedFriends: res.data,
+            search: false
           });
         });
       }).catch((e) => {
@@ -102,7 +110,8 @@ var Profile = React.createClass({
     allUserInfoFromId(newUserInfo.friends)
       .then((friends) => {
         this.setState({
-          friends: friends
+          friends: friends,
+          search: false
         });
       }).then(() => {
         sugestFriends({userFriends: newUserInfo.friends, id: newUserInfo._id})
@@ -124,6 +133,55 @@ var Profile = React.createClass({
   onLogoutClick: function() {
     this.props.onLogoutClick();
   },
+  handleSearchUsers: function(searchText) {
+      var myFriends = this.state.friends.map((friend) => {
+        return friend._id;
+      });
+      searchUsers(searchText, myFriends)
+        .then((res) => {
+          var users = res.data;
+          users = users.filter((user) => {
+            return user._id !== this.props.info.id;
+          });
+          this.setState({
+            searchUsers: users,
+            popup: false,
+            search: true
+          });
+        });
+  },
+  handleCloseSearchList: function() {
+    this.setState({
+      search: false
+    });
+  },
+  handleAddFriendFromSearch: function(newUserInfo, addedUserId) {
+    newUserInfo.page = 'profile';
+    newUserInfo.id = newUserInfo._id;
+    newUserInfo.userFriends = newUserInfo.friends;
+    localStorage.setItem('projekatPraksa', JSON.stringify(newUserInfo));
+    allUserInfoFromId(newUserInfo.friends)
+      .then((friends) => {
+        this.setState({
+          friends: friends
+        });
+      }).then(() => {
+        sugestFriends({userFriends: newUserInfo.friends, id: newUserInfo._id})
+        .then((res) => {
+          this.setState({
+            sugestedFriends: res.data
+          });
+        });
+      }).catch((e) => {
+        console.log(e);
+      });
+      var newSearchUsers = this.state.searchUsers.filter((user) => {
+        return user._id !== addedUserId
+      });
+      this.setState({
+        searchUsers: newSearchUsers
+      });
+  },
   render: function() {
     var renderPopup = () => {
       if(this.state.popup) {
@@ -138,14 +196,38 @@ var Profile = React.createClass({
         )
       }
     };
+    var renderSearchList = () => {
+      if(this.state.search) {
+        return (
+          <SearchList onCloseSearchList={this.handleCloseSearchList} onAddFriendFromSearch={this.handleAddFriendFromSearch} myId={this.props.info.id} users={this.state.searchUsers}/>
+        );
+      } else {
+        return (
+          <div>
+
+          </div>
+        )
+      }
+    };
     return (
       <div>
+
+        {renderSearchList()}
         {renderPopup()}
+        <div className="container search-bar">
+          <div className="row">
+            <div className="col-sm-8">
+              <SearchBar searchUsers={this.handleSearchUsers}/>
+            </div>
+            <div className="col-sm-4">
+              <button className="btn btn-primary btn-block" onClick={this.onLogoutClick}>logout</button>
+            </div>
+          </div>
+        </div>
         <div className="container">
           <div className="row info-friends-div">
             <div className="col-sm-12">
               <p className="message-p">{this.props.info.message}</p>
-              <button className="btn btn-primary loguot-button" onClick={this.onLogoutClick}>logout</button>
             </div>
             <div className="col-sm-8 personal-info">
               <PersonalInfo info={this.props.info}/>
