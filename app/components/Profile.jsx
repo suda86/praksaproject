@@ -67,6 +67,7 @@ var Profile = React.createClass({
       .then((friends) => {
         this.setState({
           friends: friends,
+          popup: false,
           search: false
         });
       }).then(() => {
@@ -95,6 +96,7 @@ var Profile = React.createClass({
         .then((res) => {
           this.setState({
             sugestedFriends: res.data,
+            popup: false,
             search: false
           });
         });

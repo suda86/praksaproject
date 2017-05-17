@@ -23470,6 +23470,7 @@
 	    allUserInfoFromId(newUserInfo.friends).then(function (friends) {
 	      _this4.setState({
 	        friends: friends,
+	        popup: false,
 	        search: false
 	      });
 	    }).then(function () {
@@ -23497,6 +23498,7 @@
 	      sugestFriends({ userFriends: newUserInfo.friends, id: newUserInfo._id }).then(function (res) {
 	        _this5.setState({
 	          sugestedFriends: res.data,
+	          popup: false,
 	          search: false
 	        });
 	      });
