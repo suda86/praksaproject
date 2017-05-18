@@ -24480,7 +24480,7 @@
 	        React.createElement(
 	          'button',
 	          { className: 'btn btn-info btn-block', onClick: this.onGoToRegisterClick },
-	          'sign up'
+	          'Signup'
 	        )
 	      )
 	    );
