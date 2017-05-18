@@ -23711,7 +23711,7 @@
 	      React.createElement(
 	        "p",
 	        { className: "personal-text" },
-	        "Genge: ",
+	        "Gender: ",
 	        this.props.info.gender
 	      ),
 	      React.createElement(
@@ -24142,7 +24142,7 @@
 	    return React.createElement(
 	      "div",
 	      null,
-	      React.createElement("input", { className: "form-control", type: "text", ref: "searchName", placeholder: "search for users", onChange: this.onSearch })
+	      React.createElement("input", { className: "form-control", type: "text", ref: "searchName", placeholder: "search for users by first or last name", onChange: this.onSearch })
 	    );
 	  }
 	});
@@ -24400,7 +24400,7 @@
 	        React.createElement(
 	          'h3',
 	          { className: 'register-login-button' },
-	          'If you olredy have account go to login page'
+	          'If you olready have account go to login page'
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(

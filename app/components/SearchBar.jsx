@@ -10,7 +10,7 @@ var SearchBar = React.createClass({
   render: function() {
     return (
       <div>
-        <input className="form-control" type="text" ref="searchName" placeholder="search for users" onChange={this.onSearch} />
+        <input className="form-control" type="text" ref="searchName" placeholder="search for users by first or last name" onChange={this.onSearch} />
       </div>
     );
   }
