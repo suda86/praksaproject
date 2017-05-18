@@ -52,7 +52,7 @@ var Registracija = React.createClass({
               <button className="btn btn-primary btn-block register-button">Send</button>
             </form>
           </div>
-          <h3 className="register-login-button">If you olready have account go to login page</h3><br/>
+          <h3 className="register-login-button">If you already have account go to login page</h3><br/>
           <button className="btn btn-info btn-block" onClick={this.goToLoginPage}>Login</button>
         </div>
       </div>

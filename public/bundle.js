@@ -19782,7 +19782,7 @@
 	      };
 	    } else {
 	      return {
-	        page: 'register'
+	        page: 'login'
 	      };
 	    }
 	  },

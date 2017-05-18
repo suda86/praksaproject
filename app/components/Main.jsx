@@ -22,7 +22,7 @@ var Main = React.createClass({
       }
     } else {
       return {
-        page: 'register'
+        page: 'login'
       }
     }
   },
