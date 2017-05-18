@@ -25,8 +25,8 @@ var Login = React.createClass({
             </form>
           </div>
           <p className="login-error-message">{this.props.message}</p>
-          <h3 className="login-h3">If you dont have account go to register page and make one</h3>
-          <button className="btn btn-info btn-block" onClick={this.onGoToRegisterClick}>Go to register page</button>
+          <h3 className="login-h3">If you dont have an account</h3>
+          <button className="btn btn-info btn-block" onClick={this.onGoToRegisterClick}>sign up</button>
         </div>
       </div>
     );

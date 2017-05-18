@@ -23674,7 +23674,7 @@
 	              React.createElement(
 	                'p',
 	                { className: 'footer-p' },
-	                'Created by Sasa'
+	                'Created by Sudimac Aleksandar'
 	              )
 	            )
 	          )
@@ -23892,7 +23892,7 @@
 	      React.createElement(
 	        'h3',
 	        { className: 'sugest-h3' },
-	        'Users you maybe know'
+	        'Users you may know'
 	      ),
 	      renderFriends()
 	    );
@@ -24367,11 +24367,11 @@
 	            React.createElement('br', null),
 	            React.createElement('input', { className: 'form-control', type: 'text', ref: 'lastName', placeholder: 'Last Name' }),
 	            React.createElement('br', null),
-	            React.createElement('input', { className: 'form-control', type: 'email', ref: 'email', placeholder: 'email address', required: true }),
+	            React.createElement('input', { className: 'form-control', type: 'email', ref: 'email', placeholder: 'Email address', required: true }),
 	            React.createElement('br', null),
-	            React.createElement('input', { className: 'form-control', type: 'password', ref: 'password', placeholder: 'password', required: true }),
+	            React.createElement('input', { className: 'form-control', type: 'password', ref: 'password', placeholder: 'Password', required: true }),
 	            React.createElement('br', null),
-	            React.createElement('input', { className: 'form-control', type: 'number', ref: 'age', placeholder: 'how old are you' }),
+	            React.createElement('input', { className: 'form-control', type: 'number', ref: 'age', placeholder: 'How old are you' }),
 	            React.createElement('br', null),
 	            React.createElement(
 	              'div',
@@ -24406,7 +24406,7 @@
 	        React.createElement(
 	          'button',
 	          { className: 'btn btn-info btn-block', onClick: this.goToLoginPage },
-	          'Go to login page'
+	          'Login'
 	        )
 	      )
 	    );
@@ -24475,12 +24475,12 @@
 	        React.createElement(
 	          'h3',
 	          { className: 'login-h3' },
-	          'If you dont have account go to register page and make one'
+	          'If you dont have an account'
 	        ),
 	        React.createElement(
 	          'button',
 	          { className: 'btn btn-info btn-block', onClick: this.onGoToRegisterClick },
-	          'Go to register page'
+	          'sign up'
 	        )
 	      )
 	    );

@@ -42,9 +42,9 @@ var Registracija = React.createClass({
             <form onSubmit={this.onRegisterFormSubmit}>
               <input className="form-control" type="text" ref="firstName" placeholder="First Name" required/><br/>
               <input className="form-control" type="text" ref="lastName" placeholder="Last Name" /><br/>
-              <input className="form-control" type="email" ref="email" placeholder="email address" required></input><br/>
-              <input className="form-control" type="password" ref="password" placeholder="password" required></input><br/>
-              <input className="form-control" type="number" ref="age" placeholder="how old are you" ></input><br/>
+              <input className="form-control" type="email" ref="email" placeholder="Email address" required></input><br/>
+              <input className="form-control" type="password" ref="password" placeholder="Password" required></input><br/>
+              <input className="form-control" type="number" ref="age" placeholder="How old are you" ></input><br/>
               <div className="register-radio">
                 <label className="radio-inline"><input type="radio" value="male" checked={this.state.gender === 'male'} onChange={this.handleGenderChange}/> Male</label>
                 <label className="radio-inline"><input type="radio" value="female" checked={this.state.gender === 'female'} onChange={this.handleGenderChange}/> Female</label><br/>
@@ -53,7 +53,7 @@ var Registracija = React.createClass({
             </form>
           </div>
           <h3 className="register-login-button">If you olready have account go to login page</h3><br/>
-          <button className="btn btn-info btn-block" onClick={this.goToLoginPage}>Go to login page</button>
+          <button className="btn btn-info btn-block" onClick={this.goToLoginPage}>Login</button>
         </div>
       </div>
     );

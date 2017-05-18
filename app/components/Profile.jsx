@@ -244,7 +244,7 @@ var Profile = React.createClass({
             </div>
             <div className="comtainer">
               <div className="col-sm-12 footer">
-                <p className="footer-p">Created by Sasa</p>
+                <p className="footer-p">Created by Sudimac Aleksandar</p>
               </div>
             </div>
           </div>
