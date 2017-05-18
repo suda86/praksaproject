@@ -24400,7 +24400,7 @@
 	        React.createElement(
 	          'h3',
 	          { className: 'register-login-button' },
-	          'If you olready have account go to login page'
+	          'If you already have account go to login page'
 	        ),
 	        React.createElement('br', null),
 	        React.createElement(
